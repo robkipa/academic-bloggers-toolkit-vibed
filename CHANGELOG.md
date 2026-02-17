@@ -1,5 +1,24 @@
 # CHANGELOG
 
+## 6.0.0
+
+### Modernization & mega release for WP 6.5–6.9 / PHP 8.0+ (Feb 2026)
+
+-   **Fix:** Sidebar "cannot be rendered" in block editor: resolve `PluginSidebar` / `PluginSidebarMoreMenuItem` from `wp.editor` (6.6+) with fallback to `wp.editPost`. Error boundary around sidebar so editor fails gracefully.
+-   **Fix:** "Cannot read properties of undefined (reading 'mark')" in iframe: store/resolvers use Promise chains and `.then()` (no async); import `regenerator-runtime/runtime` in editor-stores and editor-formats so generators run in iframe.
+-   **Fix:** Add-reference flow when UI store not ready: defensive `useDispatch('abt/ui')` and `useSelect` (no-op when missing); identifier kind dropdown uses local state synced with store.
+-   **Fix:** Block `apiVersion: 3` for bibliography, footnotes, static-bibliography; removes iframe deprecation. Sidebar: resolve from runtime helpers only (`wp.editor`), not `@wordpress/edit-post`.
+-   **Fix:** Sidebar `useSelect` stable refs: `getSelectedItems` returns store ref; reducer uses `EMPTY_SELECTED_ITEMS`; selector cached by content so `citedItems` / `footnotes` / `uncitedItems` stable.
+-   **Fix:** Block styles in iframe via `wp_enqueue_block_style()` for the three ABT blocks; removes "added to the iframe incorrectly" warning. Safe defaults when options missing; no PHP notices.
+-   **Deprecation:** Replace `IconButton` with `Button` (toolbar, dialogs, autocite, people fields, static bib). `ToggleControl` + `__nextHasNoMarginBottom`, `FormFileUpload` + `__next40pxDefaultSize` where supported.
+-   **Compatibility:** Requires WP 6.5+, Tested 6.9, PHP 8.0+. Depend on `wp-editor` and `wp-edit-post`. Sidebar `useSelect` in try/catch; footnote list type for TypeScript.
+
+### Tooling & dependencies (Feb 2026)
+
+-   **ESLint:** Upgrade to ESLint 9; flat config (`eslint.config.mjs`), `typescript-eslint` and `eslint-plugin-jsx-a11y`. Remove `@dsifford/eslint-config`. Fix all no-explicit-any warnings (typed component props, `Dashicon` for menu icons, `onHover` on `MenuItemsChoice`).
+-   **Build:** Upgrade copy-webpack-plugin to v9 (from v5); avoids ajv conflict with ESLint so build and lint work in one install. Local types for copy-webpack-plugin in `types/modules.d.ts`. Sass in `frontend.scss`: `@import` → `@use`. Webpack performance limits raised for editor bundle and citation-styles.
+-   **TypeScript:** Toolbar menu: type `MenuItem` props and `abt/ui` selectors; use `Dashicon` for icons. Tsconfig: remove stub `@types` (packages supply types); add `skipLibCheck: true`.
+
 ## 5.2.2
 
 ### Patches

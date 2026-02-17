@@ -1,5 +1,6 @@
-import { IconButton } from '@wordpress/components';
+import { Button } from '@wordpress/components';
 import { HTMLProps, useRef, useState } from '@wordpress/element';
+import type { ComponentProps } from 'react';
 import { __, sprintf } from '@wordpress/i18n';
 
 import { ResponseError } from 'utils/error';
@@ -73,16 +74,17 @@ function Autocite({ inputProps, ...props }: Props) {
                     }
                 }}
             />
-            <IconButton
-                isLarge
-                disabled={isInvalid}
-                icon="search"
-                isBusy={isBusy}
-                isPrimary={isBusy}
-                onClick={tryAutocite}
+            <Button
+                {...({
+                    disabled: isInvalid || isBusy,
+                    icon: 'search',
+                    isBusy,
+                    isPrimary: true,
+                    onClick: tryAutocite,
+                } as ComponentProps<typeof Button>)}
             >
                 {__('Search', 'academic-bloggers-toolkit')}
-            </IconButton>
+            </Button>
         </div>
     );
 }

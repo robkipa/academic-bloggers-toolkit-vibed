@@ -1,5 +1,6 @@
-import { IconButton } from '@wordpress/components';
+import { Button } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
+import type { ComponentProps } from 'react';
 import classNames from 'classnames';
 
 import RemoveIcon from 'components/icons/remove';
@@ -29,22 +30,29 @@ export default function PeopleFields({ fields }: Props) {
                             />
                         ))}
                         <div className={styles.buttons}>
-                            <IconButton
-                                disabled={people.length === 0}
-                                icon={<RemoveIcon />}
-                                onClick={remove}
+                            <Button
+                                {...({
+                                    disabled: people.length === 0,
+                                    icon: <RemoveIcon />,
+                                    onClick: remove,
+                                } as ComponentProps<typeof Button>)}
                             >
                                 {__(
                                     'Remove contributor',
                                     'academic-bloggers-toolkit',
                                 )}
-                            </IconButton>
-                            <IconButton icon="insert" onClick={add}>
+                            </Button>
+                            <Button
+                                {...({
+                                    icon: 'insert',
+                                    onClick: add,
+                                } as ComponentProps<typeof Button>)}
+                            >
                                 {__(
                                     'Add contributor',
                                     'academic-bloggers-toolkit',
                                 )}
-                            </IconButton>
+                            </Button>
                         </div>
                     </div>
                 </>
@@ -143,10 +151,10 @@ function Person({ data, fields, index, isLiteral }: PersonProps) {
                             }
                         />
                     )}
-                    <IconButton
-                        icon={isLiteral ? 'admin-users' : 'groups'}
-                        label={
-                            isLiteral
+                    <Button
+                        {...({
+                            icon: isLiteral ? 'admin-users' : 'groups',
+                            label: isLiteral
                                 ? __(
                                       'Toggle single name',
                                       'academic-bloggers-toolkit',
@@ -154,17 +162,16 @@ function Person({ data, fields, index, isLiteral }: PersonProps) {
                                 : __(
                                       'Toggle group name',
                                       'academic-bloggers-toolkit',
-                                  )
-                        }
-                        type="button"
-                        onClick={() =>
-                            update(index, {
-                                kind: data.kind,
-                                ...(isLiteral
-                                    ? { family: '', given: '' }
-                                    : { literal: '' }),
-                            })
-                        }
+                                  ),
+                            type: 'button',
+                            onClick: () =>
+                                update(index, {
+                                    kind: data.kind,
+                                    ...(isLiteral
+                                        ? { family: '', given: '' }
+                                        : { literal: '' }),
+                                }),
+                        } as ComponentProps<typeof Button>)}
                     />
                 </div>
             )}

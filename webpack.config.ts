@@ -1,23 +1,21 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { promises as fs } from 'fs';
 import path from 'path';
-import { promisify } from 'util';
 
 import DependencyExtractionPlugin from '@wordpress/dependency-extraction-webpack-plugin';
-import { CheckerPlugin, TsConfigPathsPlugin } from 'awesome-typescript-loader';
 import BrowserSyncPlugin from 'browser-sync-webpack-plugin';
+import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import rimrafLib from 'rimraf';
 import { rollup } from 'rollup';
-import commonjs from 'rollup-plugin-commonjs';
-import resolve from 'rollup-plugin-node-resolve';
-import { terser } from 'rollup-plugin-terser';
-import { Configuration, Plugin, ProgressPlugin } from 'webpack';
+import commonjs from '@rollup/plugin-commonjs';
+import nodeResolve from '@rollup/plugin-node-resolve';
+import terser from '@rollup/plugin-terser';
+import { rimraf } from 'rimraf';
+import type { Configuration } from 'webpack';
+import { ProgressPlugin } from 'webpack';
 
 import { version as VERSION } from './package.json';
-
-const rimraf = promisify(rimrafLib);
 
 // eslint-disable-next-line
 export default async (_: any, argv: any): Promise<Configuration> => {
@@ -31,8 +29,8 @@ export default async (_: any, argv: any): Promise<Configuration> => {
         rollup({
             input: 'citeproc',
             plugins: IS_PRODUCTION
-                ? [resolve(), commonjs(), terser()]
-                : [resolve(), commonjs()],
+                ? [nodeResolve(), commonjs(), terser()]
+                : [nodeResolve(), commonjs()],
         }),
     ]).then(async ([citeproc]) =>
         Promise.all([
@@ -44,7 +42,7 @@ export default async (_: any, argv: any): Promise<Configuration> => {
         ]),
     );
 
-    const plugins = new Set<Plugin>([
+    const plugins: Configuration['plugins'] = [
         new DependencyExtractionPlugin({
             injectPolyfill: true,
             requestToExternal(request) {
@@ -55,65 +53,56 @@ export default async (_: any, argv: any): Promise<Configuration> => {
             },
         }),
         new MiniCssExtractPlugin(),
-        new CopyWebpackPlugin([
-            {
-                from: '**/*.{php,mo,pot}',
-                ignore: ['academic-bloggers-toolkit.php'],
-            },
-            {
-                from: '*.json',
-                transform(content) {
-                    return JSON.stringify(JSON.parse(content.toString()));
+        new CopyWebpackPlugin({
+            patterns: [
+                {
+                    from: '**/*.{php,mo,pot}',
+                    globOptions: { ignore: ['academic-bloggers-toolkit.php'] },
                 },
-            },
-            {
-                from: path.resolve(__dirname, 'LICENSE'),
-            },
-            {
-                from: 'academic-bloggers-toolkit.php',
-                transform(content) {
-                    return content.toString().replace(/{{VERSION}}/g, VERSION);
+                {
+                    from: '*.json',
+                    transform(content: Buffer) {
+                        return JSON.stringify(JSON.parse(content.toString()));
+                    },
                 },
-            },
-            {
-                from: 'readme.txt',
-                transform(content) {
-                    return content
-                        .toString()
-                        .replace(/{{VERSION}}/g, VERSION)
-                        .replace(/{{CHANGELOG}}/g, CHANGELOG);
+                {
+                    from: path.resolve(__dirname, 'LICENSE'),
                 },
-            },
-        ]),
-        new CheckerPlugin(),
-    ]);
+                {
+                    from: 'academic-bloggers-toolkit.php',
+                    transform(content: Buffer) {
+                        return content.toString().replace(/{{VERSION}}/g, VERSION);
+                    },
+                },
+                {
+                    from: 'readme.txt',
+                    transform(content: Buffer) {
+                        return content
+                            .toString()
+                            .replace(/{{VERSION}}/g, VERSION)
+                            .replace(/{{CHANGELOG}}/g, CHANGELOG);
+                    },
+                },
+            ],
+        }),
+    ];
 
     if (IS_PRODUCTION) {
-        plugins.add(new ProgressPlugin());
+        plugins.push(new ProgressPlugin());
     } else {
-        plugins.add(
+        plugins.push(
             new BrowserSyncPlugin({
                 proxy: 'localhost:8080',
                 open: false,
                 reloadDebounce: 2000,
                 port: 3005,
                 notify: false,
-            }),
+            }) as any,
         );
     }
 
-    const TS_BASE_CONFIG = {
-        silent: argv.json,
-        useCache: !IS_PRODUCTION,
-        cacheDirectory: path.resolve(
-            __dirname,
-            'node_modules/.cache/awesome-typescript-loader',
-        ),
-        reportFiles: ['**/*.{ts,tsx}', '!**/__tests__/**'],
-    };
-
     return {
-        devtool: IS_PRODUCTION ? 'source-map' : 'cheap-module-eval-source-map',
+        devtool: IS_PRODUCTION ? 'source-map' : 'eval-cheap-module-source-map',
         watchOptions: {
             ignored: /(node_modules|__tests__)/,
         },
@@ -133,54 +122,39 @@ export default async (_: any, argv: any): Promise<Configuration> => {
         resolve: {
             alias: {
                 css: path.resolve(__dirname, 'src/css'),
+                utils: path.resolve(__dirname, 'src/js/utils'),
+                components: path.resolve(__dirname, 'src/js/components'),
+                gutenberg: path.resolve(__dirname, 'src/js/gutenberg'),
+                hooks: path.resolve(__dirname, 'src/js/hooks'),
+                stores: path.resolve(__dirname, 'src/js/stores'),
             },
             modules: [path.resolve(__dirname, 'src'), 'node_modules'],
             extensions: ['*', '.ts', '.tsx', '.js', '.scss'],
-            plugins: [new TsConfigPathsPlugin()],
+            plugins: [
+                new TsconfigPathsPlugin({
+                    configFile: path.resolve(__dirname, 'tsconfig.json'),
+                }) as any,
+            ],
         },
-        plugins: [...plugins],
+        plugins,
         stats: IS_PRODUCTION ? 'errors-warnings' : 'minimal',
+        performance: {
+            maxEntrypointSize: 512000,
+            maxAssetSize: 1024000,
+        },
         module: {
             rules: [
                 {
                     test: /\.tsx?$/,
                     sideEffects: false,
-                    rules: [
+                    use: [
+                        { loader: 'babel-loader' },
                         {
-                            loader: 'babel-loader',
-                        },
-                        {
-                            oneOf: [
-                                {
-                                    include: path.resolve(
-                                        __dirname,
-                                        'src/js/_legacy/workers',
-                                    ),
-                                    use: [
-                                        {
-                                            loader: 'awesome-typescript-loader',
-                                            options: {
-                                                ...TS_BASE_CONFIG,
-                                                configFileName: path.resolve(
-                                                    __dirname,
-                                                    'src/js/_legacy/workers/tsconfig.json',
-                                                ),
-                                                instance: 'workers',
-                                            },
-                                        },
-                                    ],
-                                },
-                                {
-                                    use: [
-                                        {
-                                            loader: 'awesome-typescript-loader',
-                                            options: {
-                                                ...TS_BASE_CONFIG,
-                                            },
-                                        },
-                                    ],
-                                },
-                            ],
+                            loader: 'ts-loader',
+                            options: {
+                                transpileOnly: true,
+                                configFile: path.resolve(__dirname, 'tsconfig.json'),
+                            },
                         },
                     ],
                 },
@@ -213,9 +187,10 @@ export default async (_: any, argv: any): Promise<Configuration> => {
                                                 modules: {
                                                     localIdentName:
                                                         '[name]__[local]___[hash:base64:5]',
+                                                    exportLocalsConvention:
+                                                        'camelCaseOnly',
+                                                    namedExport: false,
                                                 },
-                                                localsConvention:
-                                                    'camelCaseOnly',
                                             },
                                         },
                                     ],
@@ -227,13 +202,14 @@ export default async (_: any, argv: any): Promise<Configuration> => {
                                 {
                                     loader: 'postcss-loader',
                                     options: {
-                                        ident: 'postcss',
-                                        plugins: [
-                                            require('postcss-preset-env')(),
-                                            ...(IS_PRODUCTION
-                                                ? [require('cssnano')()]
-                                                : []),
-                                        ],
+                                        postcssOptions: {
+                                            plugins: [
+                                                require('postcss-preset-env')(),
+                                                ...(IS_PRODUCTION
+                                                    ? [require('cssnano')()]
+                                                    : []),
+                                            ],
+                                        },
                                     },
                                 },
                                 {

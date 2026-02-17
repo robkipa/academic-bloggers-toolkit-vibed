@@ -1,10 +1,10 @@
-/* eslint-disable @typescript-eslint/camelcase */
 import { addQueryArgs } from '@wordpress/url';
 
 declare const _abt_nonce: string;
 declare const ajaxurl: string;
 
-export async function fetchAjax(
+/** Promise-based (no async/await) to avoid regeneratorRuntime in editor iframe. */
+export function fetchAjax(
     action: string,
     body?: Record<string, string | number | boolean>,
 ): Promise<Response> {

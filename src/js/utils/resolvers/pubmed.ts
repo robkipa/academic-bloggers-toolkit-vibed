@@ -3,11 +3,12 @@ import { toCSL } from 'astrocite-eutils';
 
 import { ResponseError } from 'utils/error';
 
-export async function get(
+/** Promise-based to avoid async/await (regeneratorRuntime) in editor bundle. */
+export function get(
     id: string,
     db: 'pubmed' | 'pmc',
 ): Promise<CSL.Data | ResponseError> {
-    const response = await fetch(
+    return fetch(
         addQueryArgs(
             'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi',
             {
@@ -19,10 +20,13 @@ export async function get(
                 retmode: 'json',
             },
         ),
-    );
-    if (!response.ok) {
-        return new ResponseError(id, response);
-    }
-    const data = toCSL(await response.json())[0];
-    return data instanceof Error ? new ResponseError(id, response) : data;
+    ).then(response => {
+        if (!response.ok) {
+            return new ResponseError(id, response);
+        }
+        return response.json().then(json => {
+            const data = toCSL(json)[0];
+            return data instanceof Error ? new ResponseError(id, response) : data;
+        });
+    });
 }

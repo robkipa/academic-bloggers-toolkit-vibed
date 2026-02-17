@@ -1,4 +1,4 @@
-import uuid from 'uuid/v4';
+import { v4 as uuid } from 'uuid';
 
 import { fetchAjax } from 'utils/ajax';
 import { firstTruthyValue } from 'utils/data';
@@ -158,7 +158,7 @@ export async function get(url: string): Promise<CSL.Data | ResponseError> {
 function parseDateField<T extends CSL.DateFieldKey>(
     key: T,
     input?: string,
-): { [k in T]: CSL.Date } | {} {
+): { [k in T]: CSL.Date } | Record<string, never> {
     if (!input || isNaN(Date.parse(input))) {
         return {};
     }

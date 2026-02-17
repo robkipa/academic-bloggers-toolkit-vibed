@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
 import { Action, select } from '@wordpress/data';
 
 import { fetchAjax } from 'utils/ajax';
@@ -48,23 +47,22 @@ export function saveState() {
     };
 }
 
+/** Promise-based (no async/await) to avoid regeneratorRuntime in editor iframe. */
 const controls = {
-    async FETCH_CITATION_STYLES(): Promise<StyleJSON> {
-        const response = await fetchAjax('get_style_json');
-        return response.json();
+    FETCH_CITATION_STYLES(): Promise<StyleJSON> {
+        return fetchAjax('get_style_json').then(response => response.json());
     },
-    async FETCH_LOCALE({ style }: Action): Promise<string> {
+    FETCH_LOCALE({ style }: Action): Promise<string> {
         return localeCache.fetchItem(style);
     },
-    async FETCH_STYLE({ id }: Action): Promise<string> {
+    FETCH_STYLE({ id }: Action): Promise<string> {
         return styleCache.fetchItem(id);
     },
-    async SAVE_STATE({ id, state }: Action) {
-        const response = await fetchAjax('update_abt_state', {
+    SAVE_STATE({ id, state }: Action): Promise<unknown> {
+        return fetchAjax('update_abt_state', {
             post_id: id,
             state,
-        });
-        return response.json();
+        }).then(response => response.json());
     },
 };
 

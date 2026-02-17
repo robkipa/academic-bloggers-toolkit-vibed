@@ -13,7 +13,8 @@ export interface Attributes {
 
 export const name = 'abt/footnotes';
 
-export const config: BlockConfiguration<Attributes> = {
+export const config = {
+    apiVersion: 3,
     title: __('Footnotes', 'academic-bloggers-toolkit'),
     category: 'widgets',
     description: __('Display a list of footnotes', 'academic-bloggers-toolkit'),
@@ -45,6 +46,6 @@ export const config: BlockConfiguration<Attributes> = {
     },
     edit: FootnotesEdit,
     save: FootnotesSave,
-};
+} as BlockConfiguration<Attributes>;
 
 export default [name, config] as [string, typeof config];

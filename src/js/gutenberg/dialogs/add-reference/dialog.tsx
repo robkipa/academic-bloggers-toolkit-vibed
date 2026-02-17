@@ -1,4 +1,5 @@
 import { Button, ToggleControl } from '@wordpress/components';
+import type { ComponentProps } from 'react';
 import { useDispatch } from '@wordpress/data';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
@@ -44,6 +45,9 @@ function Dialog({ onClose, onSubmit }: Props) {
             <DialogToolbar>
                 <div className={styles.toolbar}>
                     <ToggleControl
+                        {...({ __nextHasNoMarginBottom: true } as ComponentProps<
+                            typeof ToggleControl
+                        > & { __nextHasNoMarginBottom?: boolean })}
                         checked={isAddingManually}
                         label={__('Add manually', 'academic-bloggers-toolkit')}
                         onChange={isChecked =>
@@ -51,7 +55,6 @@ function Dialog({ onClose, onSubmit }: Props) {
                         }
                     />
                     <Button
-                        isLarge
                         isPrimary
                         disabled={isBusy}
                         form={FORM_ID}

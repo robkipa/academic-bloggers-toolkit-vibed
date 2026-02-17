@@ -98,7 +98,7 @@ export default function StyleSearch(props: Props) {
                         setInputValue(newValue);
                     },
                     onKeyDown(e) {
-                        e.key === 'Enter' && e.preventDefault();
+                        if (e.key === 'Enter') e.preventDefault();
                     },
                 }}
                 renderInputComponent={

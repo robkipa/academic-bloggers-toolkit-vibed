@@ -25,8 +25,9 @@ export function addReferenceDialog(
     }
 }
 
+const EMPTY_SELECTED_ITEMS: string[] = [];
 const SIDEBAR_INITIAL_STATE: State['sidebar'] = {
-    selectedItems: [],
+    selectedItems: EMPTY_SELECTED_ITEMS,
     sortMode: 'title',
     sortOrder: 'asc',
 };
@@ -39,7 +40,7 @@ export function sidebar(
         case Actions.CLEAR_SELECTED_ITEMS: {
             return {
                 ...state,
-                selectedItems: [],
+                selectedItems: EMPTY_SELECTED_ITEMS,
             };
         }
         case Actions.SET_SIDEBAR_SORT_MODE: {

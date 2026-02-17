@@ -5,6 +5,7 @@ import {
 } from '@wordpress/block-editor';
 import { BlockEditProps } from '@wordpress/blocks';
 import { PanelBody, ToggleControl, Toolbar } from '@wordpress/components';
+import type { ComponentProps } from 'react';
 import { useMemo } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import classNames from 'classnames';
@@ -53,6 +54,9 @@ export default function BibliographyEdit(props: Props) {
                         }
                     />
                     <ToggleControl
+                        {...({ __nextHasNoMarginBottom: true } as ComponentProps<
+                            typeof ToggleControl
+                        > & { __nextHasNoMarginBottom?: boolean })}
                         checked={isToggleable}
                         help={__(
                             'Toggle mode can only be enabled if the bibliography has a heading.',

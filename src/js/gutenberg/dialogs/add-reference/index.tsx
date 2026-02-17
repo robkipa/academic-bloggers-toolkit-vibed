@@ -1,5 +1,6 @@
-import { IconButton, KeyboardShortcuts } from '@wordpress/components';
+import { Button, KeyboardShortcuts } from '@wordpress/components';
 import { useDispatch } from '@wordpress/data';
+import type { ComponentProps } from 'react';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { displayShortcut } from '@wordpress/keycodes';
@@ -7,7 +8,11 @@ import { displayShortcut } from '@wordpress/keycodes';
 import Dialog from './dialog';
 
 export default function AddReferenceDialog() {
-    const { addReference } = useDispatch('abt/data');
+    const dataDispatch = useDispatch('abt/data');
+    const addReference =
+        dataDispatch && typeof dataDispatch.addReference === 'function'
+            ? dataDispatch.addReference
+            : () => void 0;
     const [isOpen, setIsOpen] = useState(false);
     const toggleDialog = () => setIsOpen(!isOpen);
     return (
@@ -16,11 +21,13 @@ export default function AddReferenceDialog() {
                 bindGlobal
                 shortcuts={{ 'ctrl+alt+r': toggleDialog }}
             />
-            <IconButton
-                icon="insert"
-                label={__('Add reference', 'academic-bloggers-toolkit')}
-                shortcut={displayShortcut.primaryAlt('r')}
-                onClick={toggleDialog}
+            <Button
+                {...({
+                    icon: 'insert',
+                    label: __('Add reference', 'academic-bloggers-toolkit'),
+                    shortcut: displayShortcut.primaryAlt('r'),
+                    onClick: toggleDialog,
+                } as ComponentProps<typeof Button>)}
             />
             <Dialog
                 isOpen={isOpen}

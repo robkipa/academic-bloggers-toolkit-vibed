@@ -8,7 +8,11 @@ import Dialog from './dialog';
 import styles from './style.scss';
 
 export default function StyleDialog() {
-    const { setStyle } = useDispatch('abt/data');
+    const dataDispatch = useDispatch('abt/data');
+    const setStyle =
+        dataDispatch && typeof dataDispatch.setStyle === 'function'
+            ? dataDispatch.setStyle
+            : () => void 0;
     const [isOpen, setIsOpen] = useState(false);
     return (
         <>

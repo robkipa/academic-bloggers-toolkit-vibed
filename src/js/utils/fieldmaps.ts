@@ -18,7 +18,6 @@ export interface FieldMapping {
     readonly people: PersonField[];
 }
 
-/* eslint-disable @typescript-eslint/camelcase */
 const CSL_FIELDS: Readonly<Record<string, FieldMapping>> = {
     bill: {
         title: __('Bill', 'academic-bloggers-toolkit'),

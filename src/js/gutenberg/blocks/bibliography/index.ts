@@ -21,7 +21,8 @@ export interface Attributes {
 
 export const name = 'abt/bibliography';
 
-export const config: BlockConfiguration<Attributes> = {
+export const config = {
+    apiVersion: 3,
     title: __('Bibliography', 'academic-bloggers-toolkit'),
     category: 'widgets',
     description: __(
@@ -156,6 +157,6 @@ export const config: BlockConfiguration<Attributes> = {
     },
     edit: BibliographyEdit,
     save: BibliographySave,
-};
+} as BlockConfiguration<Attributes>;
 
 export default [name, config] as [string, typeof config];

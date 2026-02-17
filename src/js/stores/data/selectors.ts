@@ -129,7 +129,6 @@ export function getItemById(state: State, id: string): CSL.Data | undefined {
 export function getSerializedState({ references, style }: State) {
     return {
         meta: {
-            // eslint-disable-next-line @typescript-eslint/camelcase
             _abt_state: JSON.stringify({ references, style }),
         },
     };

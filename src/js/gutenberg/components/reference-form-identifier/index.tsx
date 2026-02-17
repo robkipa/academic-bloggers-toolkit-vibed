@@ -14,44 +14,49 @@ const PATTERNS: { readonly [k in IdentifierKind]: string } = {
     pmcid: 'PMC[0-9]+',
 };
 
-async function fetchData(
+/** Promise-based to avoid async/await (regeneratorRuntime) in editor bundle. */
+function fetchData(
     kind: IdentifierKind,
     value: string,
 ): Promise<CSL.Data> {
-    let response: CSL.Data | ResponseError;
+    let p: Promise<CSL.Data | ResponseError>;
     switch (kind) {
         case IdentifierKind.DOI:
-            response = await doi.get(value);
+            p = doi.get(value);
             break;
         case IdentifierKind.PMCID:
-            response = await pubmed.get(value, 'pmc');
+            p = pubmed.get(value, 'pmc');
             break;
         case IdentifierKind.PMID:
-            response = await pubmed.get(value, 'pubmed');
+            p = pubmed.get(value, 'pubmed');
             break;
         default:
-            throw new Error(
-                sprintf(
-                    __(
-                        'Invalid indentifier type: %s',
-                        'academic-bloggers-toolkit',
+            return Promise.reject(
+                new Error(
+                    sprintf(
+                        __(
+                            'Invalid indentifier type: %s',
+                            'academic-bloggers-toolkit',
+                        ),
+                        value,
                     ),
-                    value,
                 ),
             );
     }
-    if (response instanceof ResponseError) {
-        throw new Error(
-            sprintf(
-                __(
-                    'Unable to retrieve data for identifier: %s',
-                    'academic-bloggers-toolkit',
+    return p.then(response => {
+        if (response instanceof ResponseError) {
+            throw new Error(
+                sprintf(
+                    __(
+                        'Unable to retrieve data for identifier: %s',
+                        'academic-bloggers-toolkit',
+                    ),
+                    response.resource,
                 ),
-                response.resource,
-            ),
-        );
-    }
-    return response;
+            );
+        }
+        return response;
+    });
 }
 
 interface Props {
@@ -62,9 +67,31 @@ interface Props {
     setBusy(busy: boolean): void;
 }
 
+interface UIDispatch {
+    setIdentifierKind?(kind: IdentifierKind): void;
+}
+
 export default function IdentifierForm(props: Props) {
-    const { setIdentifierKind } = useDispatch('abt/ui');
-    const kind = useSelect(select => select('abt/ui').getIdentifierKind());
+    const uiDispatch = useDispatch('abt/ui') as UIDispatch | undefined;
+    const setIdentifierKind = uiDispatch?.setIdentifierKind ?? (() => void 0);
+    const storeKind = useSelect(
+        select => {
+            try {
+                return select('abt/ui').getIdentifierKind();
+            } catch {
+                return IdentifierKind.DOI;
+            }
+        },
+        [],
+    );
+    const [kind, setKindState] = useState<IdentifierKind>(storeKind);
+    useEffect(() => {
+        setKindState(storeKind);
+    }, [storeKind]);
+    const setKind = (next: IdentifierKind) => {
+        setKindState(next);
+        setIdentifierKind(next);
+    };
 
     const [value, setValue] = useState('');
 
@@ -82,22 +109,24 @@ export default function IdentifierForm(props: Props) {
         <form
             className={styles.form}
             id={id}
-            onSubmit={async e => {
+            onSubmit={e => {
                 e.preventDefault();
                 setBusy(true);
-                try {
-                    onSubmit(await fetchData(kind, value));
-                } catch (err) {
-                    onError(err.message);
-                    onClose();
-                }
+                fetchData(kind, value)
+                    .then(data => {
+                        onSubmit(data);
+                    })
+                    .catch(err => {
+                        onError(err && err.message ? err.message : String(err));
+                        onClose();
+                    });
             }}
         >
             <select
                 required
                 value={kind}
                 onChange={e => {
-                    setIdentifierKind(e.currentTarget.value as IdentifierKind);
+                    setKind(e.currentTarget.value as IdentifierKind);
                 }}
             >
                 <option value={IdentifierKind.DOI}>

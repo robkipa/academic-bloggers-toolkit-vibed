@@ -1,14 +1,16 @@
 import {
+    Button,
     createSlotFill,
+    Dashicon,
     Dropdown,
     ExternalLink,
-    IconButton,
     MenuGroup,
     MenuItem,
     MenuItemsChoice,
     NavigableMenu,
 } from '@wordpress/components';
 import { useDispatch, useSelect } from '@wordpress/data';
+import type { ComponentProps } from 'react';
 import { __ } from '@wordpress/i18n';
 
 import styles from './toolbar-menu.scss';
@@ -19,22 +21,50 @@ const { Slot: ToolbarMenuItemSlot, Fill: ToolbarMenuItemFill } = createSlotFill(
     'abt-toolbar-menu-item',
 );
 
-export const ToolbarMenuItem = (props: MenuItem.Props) => (
+export const ToolbarMenuItem = (props: ComponentProps<typeof MenuItem>) => (
     <ToolbarMenuItemFill>
         <MenuItem {...props} />
     </ToolbarMenuItemFill>
 );
 
-export default function ToolbarMenu() {
-    const { parseCitations, parseFootnotes, removeAllCitations } = useDispatch(
-        'abt/data',
-    );
-    const { setSidebarSortMode, setSidebarSortOrder } = useDispatch('abt/ui');
+const noop = () => void 0;
 
-    const { sortMode, sortOrder } = useSelect(select => ({
-        sortMode: select('abt/ui').getSidebarSortMode(),
-        sortOrder: select('abt/ui').getSidebarSortOrder(),
-    }));
+export default function ToolbarMenu() {
+    const dataDispatch = useDispatch('abt/data');
+    const uiDispatch = useDispatch('abt/ui');
+
+    const parseCitations =
+        dataDispatch && typeof dataDispatch.parseCitations === 'function'
+            ? dataDispatch.parseCitations
+            : noop;
+    const parseFootnotes =
+        dataDispatch && typeof dataDispatch.parseFootnotes === 'function'
+            ? dataDispatch.parseFootnotes
+            : noop;
+    const removeAllCitations =
+        dataDispatch && typeof dataDispatch.removeAllCitations === 'function'
+            ? dataDispatch.removeAllCitations
+            : noop;
+    const setSidebarSortMode =
+        uiDispatch && typeof uiDispatch.setSidebarSortMode === 'function'
+            ? uiDispatch.setSidebarSortMode
+            : noop;
+    const setSidebarSortOrder =
+        uiDispatch && typeof uiDispatch.setSidebarSortOrder === 'function'
+            ? uiDispatch.setSidebarSortOrder
+            : noop;
+
+    const abtUiStore = useSelect(
+        select => select('abt/ui') as { getSidebarSortMode(): string; getSidebarSortOrder(): string } | undefined,
+        [],
+    );
+    const sortMode = (abtUiStore?.getSidebarSortMode?.() ?? 'date') as
+        | 'date'
+        | 'publication'
+        | 'title';
+    const sortOrder = (abtUiStore?.getSidebarSortOrder?.() ?? 'asc') as
+        | 'asc'
+        | 'desc';
 
     const refreshItems = () => {
         parseCitations();
@@ -59,13 +89,13 @@ export default function ToolbarMenu() {
             renderContent={({ onClose }) => (
                 <NavigableMenu className={styles.menu}>
                     <section role="list" onClickCapture={onClose}>
-                        <MenuItem icon="trash" onClick={removeAllCitations}>
+                        <MenuItem icon={<Dashicon icon="trash" />} onClick={removeAllCitations}>
                             {__(
                                 'Remove all citations',
                                 'academic-bloggers-toolkit',
                             )}
                         </MenuItem>
-                        <MenuItem icon="update" onClick={refreshItems}>
+                        <MenuItem icon={<Dashicon icon="update" />} onClick={refreshItems}>
                             {__(
                                 'Refresh all items',
                                 'academic-bloggers-toolkit',
@@ -115,6 +145,7 @@ export default function ToolbarMenu() {
                                     | 'publication'
                                     | 'title')
                             }
+                            onHover={() => {}}
                         />
                     </MenuGroup>
                     <MenuGroup
@@ -139,10 +170,11 @@ export default function ToolbarMenu() {
                             onSelect={order =>
                                 setSortOrder(order as 'asc' | 'desc')
                             }
+                            onHover={() => {}}
                         />
                     </MenuGroup>
                     <Separator />
-                    <MenuItem icon="editor-help">
+                    <MenuItem icon={<Dashicon icon="editor-help" />}>
                         <ExternalLink href="https://github.com/dsifford/academic-bloggers-toolkit/wiki">
                             {// translators: Link that goes to usage instructions.
                             __(
@@ -154,14 +186,16 @@ export default function ToolbarMenu() {
                 </NavigableMenu>
             )}
             renderToggle={({ onToggle }) => (
-                <IconButton
-                    className={styles.moreIcon}
-                    icon="ellipsis"
-                    label={
-                        // translators: Button label telling users that clicking shows additional options.
-                        __('More options', 'academic-bloggers-toolkit')
-                    }
-                    onClick={onToggle}
+                <Button
+                    {...({
+                        className: styles.moreIcon,
+                        icon: 'ellipsis',
+                        label: __(
+                            'More options',
+                            'academic-bloggers-toolkit',
+                        ),
+                        onClick: onToggle,
+                    } as ComponentProps<typeof Button>)}
                 />
             )}
         />

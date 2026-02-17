@@ -31,7 +31,7 @@ function Dialog({ onSubmit }: Props) {
             />
             <DialogToolbar>
                 <div className={styles.toolbar}>
-                    <Button isLarge isPrimary type="submit">
+                    <Button isPrimary type="submit">
                         {__('Confirm', 'academic-bloggers-toolkit')}
                     </Button>
                 </div>

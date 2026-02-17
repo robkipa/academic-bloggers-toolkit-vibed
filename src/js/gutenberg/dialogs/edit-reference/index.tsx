@@ -26,7 +26,7 @@ function EditDialog({ onSubmit, itemId }: Props) {
             <ManualReferenceForm data={data} id={FORM_ID} onSubmit={onSubmit} />
             <DialogToolbar>
                 <div className={styles.toolbar}>
-                    <Button isLarge isPrimary form={FORM_ID} type="submit">
+                    <Button isPrimary form={FORM_ID} type="submit">
                         {__('Update Reference', 'academic-bloggers-toolkit')}
                     </Button>
                 </div>

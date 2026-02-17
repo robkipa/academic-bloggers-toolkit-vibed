@@ -65,7 +65,6 @@ class Processor {
         },
     };
 
-    /* eslint-disable @typescript-eslint/camelcase */
     constructor(style: string) {
         const { instance } = Processor;
         if (instance) {
@@ -82,7 +81,6 @@ class Processor {
             this.engine.opt.development_extensions.wrap_url_and_doi = true;
         }
     }
-    /* eslint-enable @typescript-eslint/camelcase */
 
     parseCitations(citations: Citation[]): Processor.CitationMeta[] {
         return this.engine

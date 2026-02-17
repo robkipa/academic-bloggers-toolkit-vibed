@@ -43,7 +43,7 @@ function AddFootnoteDialog({ onSubmit }: Props) {
             />
             <DialogToolbar>
                 <div className={styles.toolbar}>
-                    <Button isLarge isPrimary type="submit">
+                    <Button isPrimary type="submit">
                         {__('Add footnote', 'academic-bloggers-toolkit')}
                     </Button>
                 </div>

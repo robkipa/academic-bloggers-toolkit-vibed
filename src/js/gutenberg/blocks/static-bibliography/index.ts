@@ -1,6 +1,6 @@
 import { BlockConfiguration, createBlock } from '@wordpress/blocks';
 import { __ } from '@wordpress/i18n';
-import uuid from 'uuid/v4';
+import { v4 as uuid } from 'uuid';
 
 import { stripListItem } from 'utils/editor';
 import Processor from 'utils/processor';
@@ -15,7 +15,8 @@ export interface Attributes {
 
 export const name = 'abt/static-bibliography';
 
-export const config: BlockConfiguration<Attributes> = {
+export const config = {
+    apiVersion: 3,
     title: __('Static Bibliography', 'academic-bloggers-toolkit'),
     category: 'widgets',
     description: __(
@@ -92,6 +93,6 @@ export const config: BlockConfiguration<Attributes> = {
     },
     edit,
     save,
-};
+} as BlockConfiguration<Attributes>;
 
 export default [name, config] as [string, typeof config];

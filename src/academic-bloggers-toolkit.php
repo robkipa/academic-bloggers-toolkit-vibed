@@ -4,6 +4,9 @@
  * Plugin URI: https://github.com/dsifford/academic-bloggers-toolkit/
  * Description: A plugin extending the functionality of WordPress for academic blogging
  * Version: {{VERSION}}
+ * Requires at least: 6.5
+ * Tested up to: 6.9
+ * Requires PHP: 8.0
  * Author: Derek P Sifford
  * Author URI: https://github.com/dsifford
  * License: GPL3 or later.

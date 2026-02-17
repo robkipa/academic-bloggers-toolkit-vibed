@@ -1,6 +1,7 @@
 import { RichText } from '@wordpress/block-editor';
-import { IconButton } from '@wordpress/components';
+import { Button } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
+import type { ComponentProps } from 'react';
 import classNames from 'classnames';
 
 import styles from './style.scss';
@@ -30,22 +31,34 @@ export default function LiveItem({
                 value={content}
             />
             <div className={styles.buttonList}>
-                <IconButton
-                    disabled={!onMoveUp}
-                    icon="arrow-up-alt2"
-                    label={__('Move item up', 'academic-bloggers-toolkit')}
-                    onClick={onMoveUp}
+                <Button
+                    {...({
+                        disabled: !onMoveUp,
+                        icon: 'arrow-up-alt2',
+                        label: __(
+                            'Move item up',
+                            'academic-bloggers-toolkit',
+                        ),
+                        onClick: onMoveUp,
+                    } as ComponentProps<typeof Button>)}
                 />
-                <IconButton
-                    icon="trash"
-                    label={__('Remove item', 'academic-bloggers-toolkit')}
-                    onClick={onRemove}
+                <Button
+                    {...({
+                        icon: 'trash',
+                        label: __('Remove item', 'academic-bloggers-toolkit'),
+                        onClick: onRemove,
+                    } as ComponentProps<typeof Button>)}
                 />
-                <IconButton
-                    disabled={!onMoveDown}
-                    icon="arrow-down-alt2"
-                    label={__('Move item down', 'academic-bloggers-toolkit')}
-                    onClick={onMoveDown}
+                <Button
+                    {...({
+                        disabled: !onMoveDown,
+                        icon: 'arrow-down-alt2',
+                        label: __(
+                            'Move item down',
+                            'academic-bloggers-toolkit',
+                        ),
+                        onClick: onMoveDown,
+                    } as ComponentProps<typeof Button>)}
                 />
             </div>
         </div>

@@ -1,4 +1,4 @@
-import uuid from 'uuid/v4';
+import { v4 as uuid } from 'uuid';
 
 import { ZERO_WIDTH_SPACE } from 'utils/constants';
 import { createSelector } from 'utils/dom';

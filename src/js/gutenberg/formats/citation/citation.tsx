@@ -129,7 +129,7 @@ export default compose(
                         ZERO_WIDTH_SPACE + node.innerHTML + ZERO_WIDTH_SPACE;
                 }
             }
-            const { clientId, ...updates } = parse(block.innerHTML)[0];
+            const { clientId: _clientId, ...updates } = parse(block.innerHTML)[0];
             dispatch('core/block-editor').updateBlock(
                 selectedBlock.clientId,
                 updates,

@@ -34,7 +34,7 @@ export function references(
     switch (action.type) {
         case Actions.ADD_REFERENCES: {
             const newItems = (action.data as CSL.Data[])
-                .map(({ id, ...data }) => ({
+                .map(({ id: _id, ...data }) => ({
                     ...data,
                     id: `${hash(JSON.stringify(data))}`,
                 }))

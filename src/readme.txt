@@ -2,9 +2,9 @@
 Contributors: dsifford
 Donate link: https://donorbox.org/academic-bloggers-toolkit
 Tags: academia, academic, bibliographies, bibliography, bibtex, citation, citations, cite, citing, CSL, curriculum vitae, cv, doi, endnote, footnote, footnotes, journal, mendeley, papers, pmid, pmcid, publications, publish, pubmed, reference, reference list, reference manager, references, referencing, ris, scholar, scholarly, zotero
-Requires at least: 5.3
-Tested up to: 5.3
-Requires PHP: 7.0
+Requires at least: 6.5
+Tested up to: 6.9
+Requires PHP: 8.0
 Stable tag: {{VERSION}}
 
 A plugin extending the functionality of Wordpress for academic blogging.
