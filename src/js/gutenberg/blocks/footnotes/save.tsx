@@ -11,7 +11,7 @@ export default function FootnotesSave({ attributes: { items } }: Props) {
         // eslint-disable-next-line jsx-a11y/no-redundant-roles
         <section
             aria-label={__('Footnotes', 'academic-bloggers-toolkit')}
-            className="abt-footnotes"
+            className="wp-block-abt-footnotes abt-footnotes"
             role="region"
         >
             <hr />

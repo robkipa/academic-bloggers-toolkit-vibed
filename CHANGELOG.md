@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 6.0.1
+
+### Patches
+
+-   **Fix:** Block validation for content created in 5.2.2: add `wp-block-*` wrapper class to save output for bibliography, footnotes, and static-bibliography so it matches stored markup; removes "Block contains unexpected or invalid content" when editing older posts.
+
 ## 6.0.0
 
 ### Modernization & mega release for WP 6.5–6.9 / PHP 8.0+ (Feb 2026)

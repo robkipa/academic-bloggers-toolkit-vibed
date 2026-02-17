@@ -18,7 +18,7 @@ export default function BibliographySave(props: Props) {
         // eslint-disable-next-line jsx-a11y/no-redundant-roles
         <section
             aria-label={__('Bibliography', 'academic-bloggers-toolkit')}
-            className="abt-bibliography"
+            className="wp-block-abt-bibliography abt-bibliography"
             role="region"
         >
             {isToggleable && (

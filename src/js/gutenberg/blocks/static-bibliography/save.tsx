@@ -14,7 +14,7 @@ export default function BibliographySave({
         // eslint-disable-next-line jsx-a11y/no-redundant-roles
         <section
             aria-label={__('References', 'academic-bloggers-toolkit')}
-            className="abt-static-bib"
+            className="wp-block-abt-static-bibliography abt-static-bib"
             role="region"
         >
             <ListTag className="abt-bibliography__body">

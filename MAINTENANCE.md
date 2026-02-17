@@ -23,3 +23,10 @@ Summary of changes from the original Academic Blogger's Toolkit (2019–2021) in
 - **ESLint 9:** Flat config (`eslint.config.mjs`), `typescript-eslint`, `eslint-plugin-jsx-a11y`; removed `@dsifford/eslint-config`. All no-explicit-any warnings fixed (typed props, `Dashicon`, `onHover`).
 - **Build:** copy-webpack-plugin upgraded to v9 (from v5); avoids ajv conflict with ESLint so `npm run build` and `npm run lint` both work in one install. Local types for copy-webpack-plugin in `types/modules.d.ts`. Sass: `@import` → `@use` in `frontend.scss`; webpack performance limits raised.
 - **TypeScript:** Toolbar menu types and `abt/ui` selectors fixed; stub `@types` removed (packages supply types); `skipLibCheck: true` in tsconfig.
+
+## 6.0.1 (Feb 2026)
+
+### Block validation (5.2.2 compatibility)
+
+- **Cause:** Posts created with 5.2.2 store block markup with the core wrapper class `wp-block-abt-bibliography` (and same for footnotes, static-bibliography). In 6.0.0 the save functions only output `abt-bibliography` etc., so validation compared different HTML and failed.
+- **Change:** Save output for all three blocks now includes the `wp-block-*` class on the wrapper (`wp-block-abt-bibliography abt-bibliography`, etc.) so it matches existing content.
