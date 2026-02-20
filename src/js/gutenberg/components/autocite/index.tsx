@@ -1,6 +1,6 @@
 import { Button } from '@wordpress/components';
-import { HTMLProps, useRef, useState } from '@wordpress/element';
-import type { ComponentProps } from 'react';
+import { useRef, useState } from '@wordpress/element';
+import type { ComponentProps, InputHTMLAttributes } from 'react';
 import { __, sprintf } from '@wordpress/i18n';
 
 import { ResponseError } from 'utils/error';
@@ -12,7 +12,7 @@ interface Props {
     /**
      * Props to pass through to the input element.
      */
-    inputProps?: HTMLProps<HTMLInputElement>;
+    inputProps?: InputHTMLAttributes<HTMLInputElement>;
     /**
      * The kind of autocite to be performed.
      */

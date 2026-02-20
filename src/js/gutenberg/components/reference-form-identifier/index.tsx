@@ -4,14 +4,16 @@ import { __, sprintf } from '@wordpress/i18n';
 
 import { IdentifierKind } from 'utils/constants';
 import { ResponseError } from 'utils/error';
-import { doi, pubmed } from 'utils/resolvers';
+import { doi, isbn, pubmed, url } from 'utils/resolvers';
 
 import styles from './style.scss';
 
 const PATTERNS: { readonly [k in IdentifierKind]: string } = {
     doi: '10\\.[^ ]+',
-    pmid: '[0-9]+',
+    isbn: '[0-9-]+',
     pmcid: 'PMC[0-9]+',
+    pmid: '[0-9]+',
+    url: 'https?://.+',
 };
 
 /** Promise-based to avoid async/await (regeneratorRuntime) in editor bundle. */
@@ -24,11 +26,17 @@ function fetchData(
         case IdentifierKind.DOI:
             p = doi.get(value);
             break;
+        case IdentifierKind.ISBN:
+            p = isbn.get(value);
+            break;
         case IdentifierKind.PMCID:
             p = pubmed.get(value, 'pmc');
             break;
         case IdentifierKind.PMID:
             p = pubmed.get(value, 'pubmed');
+            break;
+        case IdentifierKind.URL:
+            p = url.get(value);
             break;
         default:
             return Promise.reject(
@@ -132,11 +140,17 @@ export default function IdentifierForm(props: Props) {
                 <option value={IdentifierKind.DOI}>
                     {__('DOI', 'academic-bloggers-toolkit')}
                 </option>
-                <option value={IdentifierKind.PMID}>
-                    {__('PMID', 'academic-bloggers-toolkit')}
+                <option value={IdentifierKind.ISBN}>
+                    {__('ISBN', 'academic-bloggers-toolkit')}
                 </option>
                 <option value={IdentifierKind.PMCID}>
                     {__('PMCID', 'academic-bloggers-toolkit')}
+                </option>
+                <option value={IdentifierKind.PMID}>
+                    {__('PMID', 'academic-bloggers-toolkit')}
+                </option>
+                <option value={IdentifierKind.URL}>
+                    {__('URL', 'academic-bloggers-toolkit')}
                 </option>
             </select>
             <input

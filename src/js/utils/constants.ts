@@ -2,8 +2,10 @@
 
 export const enum IdentifierKind {
     DOI = 'doi',
-    PMID = 'pmid',
+    ISBN = 'isbn',
     PMCID = 'pmcid',
+    PMID = 'pmid',
+    URL = 'url',
 }
 
 const CSL_DATE_KEYS: readonly CSL.DateFieldKey[] = [
