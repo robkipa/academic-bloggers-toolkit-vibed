@@ -14,3 +14,6 @@ Thumbs.db
 
 # Cursor IDE
 .cursor
+
+# Release artifacts (source zips, etc.)
+release
