@@ -1,6 +1,6 @@
 // Type definitions for citeproc-js
 // Project: https://github.com/Juris-M/citeproc-js
-// Definitions by: Derek P Sifford <https://github.com/dsifford>
+// Definitions by: Rob Kipa + AI (Vibed fork); originally from dsifford
 
 declare module 'citeproc' {
     /**

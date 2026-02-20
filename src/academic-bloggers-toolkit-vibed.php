@@ -1,14 +1,14 @@
 <?php
 /**
- * Plugin Name: Academic Blogger's Toolkit
- * Plugin URI: https://github.com/dsifford/academic-bloggers-toolkit/
- * Description: A plugin extending the functionality of WordPress for academic blogging
+ * Plugin Name: Academic Blogger's Toolkit Vibed
+ * Plugin URI: https://github.com/robkipa/academic-bloggers-toolkit-vibed
+ * Description: A plugin extending WordPress for academic blogging — a modernized fork of dsifford's Academic Blogger's Toolkit, now for WordPress 6.5+.
  * Version: {{VERSION}}
  * Requires at least: 6.5
  * Tested up to: 6.9
  * Requires PHP: 8.0
- * Author: Derek P Sifford
- * Author URI: https://github.com/dsifford
+ * Author: Rob Kipa + AI
+ * Author URI: https://github.com/robkipa
  * License: GPL3 or later.
  * License URI: https://www.gnu.org/licenses/gpl-3.0.html
  * Text Domain: academic-bloggers-toolkit
@@ -96,7 +96,7 @@ function add_donate_link( array $links, string $file ): array {
 	if ( plugin_basename( __FILE__ ) === $file ) {
 		$links[] = sprintf(
 			'&hearts; <a href="%s">%s</a>',
-			'https://donorbox.org/academic-bloggers-toolkit',
+			'https://paypal.me/robkipa/10',
 			__( 'Donate', 'academic-bloggers-toolkit' )
 		);
 	}
@@ -190,4 +190,3 @@ if ( is_admin() ) {
 } else {
 	require_once __DIR__ . '/php/frontend.php';
 }
-

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-abt=academic-bloggers-toolkit
+abt=academic-bloggers-toolkit-vibed
 zip_filename="$abt-${npm_package_version:?This script must be invoked using npm scripts}".zip
 cache_dir="./node_modules/.cache/$abt"
 

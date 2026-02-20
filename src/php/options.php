@@ -18,8 +18,8 @@ use function ABT\Utils\get_citation_styles;
  */
 function register_options_page() {
 	add_options_page(
-		__( "Academic Blogger's Toolkit Options", 'academic-bloggers-toolkit' ),
-		__( "Academic Blogger's Toolkit", 'academic-bloggers-toolkit' ),
+		__( "Academic Blogger's Toolkit Vibed Options", 'academic-bloggers-toolkit' ),
+		__( "Academic Blogger's Toolkit Vibed", 'academic-bloggers-toolkit' ),
 		'manage_options',
 		'abt-options',
 		__NAMESPACE__ . '\render_options_page'

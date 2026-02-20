@@ -1,7 +1,7 @@
 <!--
 Please use this template for all bug reports.
 
-Before submitting an issue, please try disabling all other plugins to ensure issue is isolated within ABT
+Before submitting an issue, please try disabling all other plugins to ensure the issue is isolated within ABT Vibed. Issues and PRs are for this fork: [Academic Blogger's Toolkit Vibed](https://github.com/robkipa/academic-bloggers-toolkit-vibed).
 -->
 
 <!-- Which version of ABT are you currently using? -->

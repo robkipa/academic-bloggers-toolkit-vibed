@@ -13,10 +13,10 @@ defined( 'ABSPATH' ) || exit;
 
 <div class="wrap">
 	<h1 class="options-page__title">
-		<span><?php esc_html_e( "Academic Blogger's Toolkit Options", 'academic-bloggers-toolkit' ); ?></span>
+		<span><?php esc_html_e( "Academic Blogger's Toolkit Vibed Options", 'academic-bloggers-toolkit' ); ?></span>
 		<a
 			class="button-primary"
-			href="https://donorbox.org/academic-bloggers-toolkit"
+			href="https://paypal.me/robkipa/10"
 			target="_blank"
 			rel="noopener noreferrer"
 		>&hearts; Donate</a>
@@ -34,7 +34,7 @@ defined( 'ABSPATH' ) || exit;
 								sprintf(
 									/* translators: %s: github url */
 									__( 'If you experience a bug or would like to request a new feature, please visit the <a href="%s">GitHub Repository</a> and submit an issue.', 'academic-bloggers-toolkit' ),
-									'https://github.com/dsifford/academic-bloggers-toolkit'
+									'https://github.com/robkipa/academic-bloggers-toolkit-vibed'
 								),
 								[
 									'a' => [
@@ -221,7 +221,7 @@ defined( 'ABSPATH' ) || exit;
 										data-theme-id="dark"
 										data-slug-hash="pboYoZ"
 										data-default-tab="css,result"
-										data-user="dsifford"
+										data-user="robkipa"
 										data-embed-version="2"
 										data-pen-title="Tooltips"
 										data-preview="true"
@@ -235,7 +235,7 @@ defined( 'ABSPATH' ) || exit;
 										data-theme-id="dark"
 										data-slug-hash="JKjzGj"
 										data-default-tab="css,result"
-										data-user="dsifford"
+										data-user="robkipa"
 										data-embed-version="2"
 										data-pen-title="Bibliography"
 										data-preview="true"
@@ -249,7 +249,7 @@ defined( 'ABSPATH' ) || exit;
 										data-theme-id="dark"
 										data-slug-hash="xErGdq"
 										data-default-tab="css,result"
-										data-user="dsifford"
+										data-user="robkipa"
 										data-embed-version="2"
 										data-pen-title="Inline Citations"
 										data-preview="true"

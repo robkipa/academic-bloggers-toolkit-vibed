@@ -57,7 +57,7 @@ export default async (_: any, argv: any): Promise<Configuration> => {
             patterns: [
                 {
                     from: '**/*.{php,mo,pot}',
-                    globOptions: { ignore: ['academic-bloggers-toolkit.php'] },
+                    globOptions: { ignore: ['academic-bloggers-toolkit-vibed.php'] },
                 },
                 {
                     from: '*.json',
@@ -69,7 +69,7 @@ export default async (_: any, argv: any): Promise<Configuration> => {
                     from: path.resolve(__dirname, 'LICENSE'),
                 },
                 {
-                    from: 'academic-bloggers-toolkit.php',
+                    from: 'academic-bloggers-toolkit-vibed.php',
                     transform(content: Buffer) {
                         return content.toString().replace(/{{VERSION}}/g, VERSION);
                     },

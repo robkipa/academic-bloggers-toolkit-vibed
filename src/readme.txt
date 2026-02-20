@@ -1,25 +1,27 @@
-=== Academic Blogger's Toolkit ===
-Contributors: dsifford
-Donate link: https://donorbox.org/academic-bloggers-toolkit
+=== Academic Blogger's Toolkit Vibed ===
+Contributors: robkipa
+Donate link: https://paypal.me/robkipa/10
 Tags: academia, academic, bibliographies, bibliography, bibtex, citation, citations, cite, citing, CSL, curriculum vitae, cv, doi, endnote, footnote, footnotes, journal, mendeley, papers, pmid, pmcid, publications, publish, pubmed, reference, reference list, reference manager, references, referencing, ris, scholar, scholarly, zotero
 Requires at least: 6.5
 Tested up to: 6.9
 Requires PHP: 8.0
 Stable tag: {{VERSION}}
 
-A plugin extending the functionality of Wordpress for academic blogging.
+A plugin extending WordPress for academic blogging - a modernized fork of dsifford's Academic Blogger's Toolkit, now for WordPress 6.5+.
 
 == Description ==
 
 **FULLY SUPPORTS THE NEW BLOCK EDITOR!**
 
-Academic Blogger's toolkit is an **open source** WordPress plugin providing an all-in-one solution for effective academic blogging.
+This fork is based on [Academic Blogger's Toolkit](https://github.com/dsifford/academic-bloggers-toolkit) by Derek P Sifford.
+
+Academic Blogger's Toolkit Vibed is an **open source** WordPress plugin providing an all-in-one solution for effective academic blogging.
 
 = This README page is not kept up to date! =
 
-For a constaintly updated, exhaustively detailed, introduction to this plugin and all its features, please visit the plugin's [GitHub Repository](https://github.com/dsifford/academic-bloggers-toolkit).
+For a constantly updated, exhaustively detailed, introduction to this plugin and all its features, please visit the plugin's [GitHub Repository](https://github.com/robkipa/academic-bloggers-toolkit-vibed).
 
-To dive right into the documentation, check out the [Academic Blogger's Toolkit Wiki](https://github.com/dsifford/academic-bloggers-toolkit/wiki)!
+To dive right into the documentation, check out the [Academic Blogger's Toolkit Wiki](https://github.com/dsifford/academic-bloggers-toolkit/wiki) (original project).
 
 = Features =
 
@@ -33,7 +35,7 @@ To dive right into the documentation, check out the [Academic Blogger's Toolkit 
 
 = Contributing =
 
-If you're a developer and would like to contribute, you can do so via this plugin's [GitHub Repository](https://github.com/dsifford/academic-bloggers-toolkit).
+If you're a developer and would like to contribute, you can do so via this plugin's [GitHub Repository](https://github.com/robkipa/academic-bloggers-toolkit-vibed).
 
 == Screenshots ==
 
@@ -45,4 +47,4 @@ If you're a developer and would like to contribute, you can do so via this plugi
 
 {{CHANGELOG}}
 
-[See the previous changelogs here](https://github.com/dsifford/academic-bloggers-toolkit/blob/master/CHANGELOG.md).
+[See the previous changelogs here](https://github.com/robkipa/academic-bloggers-toolkit-vibed/blob/master/CHANGELOG.md).
