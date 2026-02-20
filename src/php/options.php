@@ -55,7 +55,16 @@ function render_options_page() {
 		);
 	}
 
-	$options = get_option( ABT_OPTIONS_KEY );
+	$options = get_option( ABT_OPTIONS_KEY, [] );
+	if ( ! is_array( $options ) ) {
+		$options = [];
+	}
+
+	$default_style = [
+		'kind'  => 'predefined',
+		'label' => 'American Medical Association',
+		'value' => 'american-medical-association',
+	];
 
 	if (
 		isset( $_POST[ ABT_NONCE ], $_POST['citation_style'] ) &&
@@ -65,6 +74,10 @@ function render_options_page() {
 		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		$options['citation_style'] = json_decode( wp_unslash( $_POST['citation_style'] ), true );
 		update_option( ABT_OPTIONS_KEY, $options );
+	}
+
+	if ( empty( $options['citation_style'] ) || ! is_array( $options['citation_style'] ) ) {
+		$options['citation_style'] = $default_style;
 	}
 
 	wp_localize_script(

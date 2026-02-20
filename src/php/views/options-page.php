@@ -58,15 +58,16 @@ defined( 'ABSPATH' ) || exit;
 										<?php echo esc_html( PHP_VERSION ); ?>
 									</td>
 									<td>
-									<?php if ( version_compare( PHP_VERSION, '7.2', '<' ) ) : ?>
+									<?php if ( version_compare( PHP_VERSION, '8.0', '<' ) ) : ?>
 										<strong style="color: red;">
 											<?php
-												sprintf(
-													/* translators: %s: version number */
-													__( 'PHP version should be at least %s', 'academic-bloggers-toolkit' ),
-													'7.2'
+												echo esc_html(
+													sprintf(
+														/* translators: %s: version number */
+														__( 'PHP version should be at least %s', 'academic-bloggers-toolkit' ),
+														'8.0'
+													)
 												);
-												esc_html_e( 'PHP version should be at least 7.2', 'academic-bloggers-toolkit' );
 											?>
 										</strong>
 									<?php endif; ?>

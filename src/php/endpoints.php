@@ -18,9 +18,17 @@ use function ABT\Utils\get_citation_styles;
  */
 function get_style_json() {
 	check_ajax_referer( 'abt-ajax' );
-	$styles        = get_citation_styles();
-	$current_style = get_option( ABT_OPTIONS_KEY )['citation_style'];
-	if ( 'custom' === $current_style['kind'] ) {
+	$styles = get_citation_styles();
+	$options = get_option( ABT_OPTIONS_KEY, [] );
+	if ( ! is_array( $options ) ) {
+		$options = [];
+	}
+	$current_style = $options['citation_style'] ?? [
+		'kind'  => 'predefined',
+		'label' => 'American Medical Association',
+		'value' => 'american-medical-association',
+	];
+	if ( 'custom' === ( $current_style['kind'] ?? '' ) ) {
 		$styles->styles[] = $current_style;
 	}
 	wp_send_json( $styles );
@@ -54,8 +62,10 @@ function get_website_meta() {
 	$payload = [
 		'article'  => [],
 		'authors'  => [],
+		'issued'   => null,
 		'og'       => [],
 		'sailthru' => [],
+		'title'    => '',
 	];
 
 	/**

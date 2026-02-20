@@ -59,7 +59,10 @@ register_uninstall_hook( __FILE__, __NAMESPACE__ . '\uninstall' );
  * @link https://app.quicktype.io?share=E2qRt1Cg3TR6qmHbXDcY
  */
 function refactor_options() {
-	$options = get_option( ABT_OPTIONS_KEY );
+	$options = get_option( ABT_OPTIONS_KEY, [] );
+	if ( ! is_array( $options ) ) {
+		$options = [];
+	}
 	if ( version_compare( ABT_VERSION, $options['VERSION'] ?? '0', '>' ) ) {
 		$new_options = [
 			'VERSION'        => ABT_VERSION,

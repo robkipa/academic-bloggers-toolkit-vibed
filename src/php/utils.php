@@ -36,14 +36,29 @@ function add_json_script( string $id, $data ) {
 }
 
 /**
- * Parses and returns ./citation-styles.json
+ * Parses and returns ./citation-styles.json.
+ * Returns a safe empty structure if the file is missing or invalid.
+ *
+ * @return object Object with 'styles' array (and possibly other keys).
  */
 function get_citation_styles() {
-	return json_decode(
-		file_get_contents( // phpcs:ignore
-			ABT_ROOT_PATH . '/citation-styles.json'
-		)
-	);
+	static $cached = null;
+	if ( null !== $cached ) {
+		return $cached;
+	}
+	$path = ABT_ROOT_PATH . '/citation-styles.json';
+	if ( ! is_readable( $path ) ) {
+		$cached = (object) [ 'styles' => [] ];
+		return $cached;
+	}
+	$raw  = file_get_contents( $path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+	$data = json_decode( $raw );
+	if ( null === $data && JSON_ERROR_NONE !== json_last_error() ) {
+		$cached = (object) [ 'styles' => [] ];
+		return $cached;
+	}
+	$cached = is_object( $data ) ? $data : (object) [ 'styles' => [] ];
+	return $cached;
 }
 
 /**
