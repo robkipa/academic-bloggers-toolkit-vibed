@@ -18,8 +18,7 @@
     "webpack": "export NODE_OPTIONS=--openssl-legacy-provider && TS_NODE_PROJECT=./tsconfig.node.json TS_NODE_FILES=true npx webpack",
     "wp": "docker-compose exec wordpress wp",
     "zip": "npm run build && ./scripts/zip.sh",
-    "zip:dev": "npm run build:dev && ./scripts/zip.sh",
-    "source-archives": "./scripts/source-archives.sh"
+    "zip:dev": "npm run build:dev && ./scripts/zip.sh"
   },
   "browserslist": [
     "extends @wordpress/browserslist-config"
