@@ -1,18 +1,18 @@
 import { Citation } from 'citeproc';
 import lodash, { differenceWith, get, orderBy, partial } from 'lodash';
 
-import { clone, firstTruthyValue } from 'utils/data';
+import { firstTruthyValue } from 'utils/data';
 import { getEditorDOM } from 'utils/editor';
 import { CitationElement, FootnoteElement } from 'utils/element';
 
 import { State } from './';
 
 export function getCitationStyles(state: State): State['citationStyles'] {
-    return clone(state.citationStyles);
+    return state.citationStyles;
 }
 
 export function getStyle(state: State): State['style'] {
-    return clone(state.style);
+    return state.style;
 }
 
 export function getCitationsByIndex(state: State): Citation[] {
@@ -80,7 +80,7 @@ export function getItems(state: State, kind?: 'cited' | 'uncited'): CSL.Data[] {
         case 'uncited':
             return getUncitedItems(state);
         default:
-            return clone(state.references);
+            return state.references;
     }
 }
 
@@ -123,7 +123,7 @@ export function getSortedItems(
 }
 
 export function getItemById(state: State, id: string): CSL.Data | undefined {
-    return clone(state.references.find(item => item.id === id));
+    return state.references.find(item => item.id === id);
 }
 
 export function getSerializedState({ references, style }: State) {
