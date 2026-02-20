@@ -26,8 +26,14 @@
       "types"
     ],
     "paths": {
-      "@wordpress/*": [
-        "../../types/wordpress__*"
+      "@wordpress/data": [
+        "../../node_modules/@wordpress/data/build-types/index.d.ts"
+      ],
+      "@wordpress/element": [
+        "../../node_modules/@wordpress/element/build-types/index.d.ts"
+      ],
+      "@wordpress/plugins": [
+        "../../node_modules/@wordpress/plugins/build-types/index.d.ts"
       ]
     },
     "plugins": [
