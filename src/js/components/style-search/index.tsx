@@ -56,7 +56,9 @@ export default function StyleSearch(props: Props) {
     const search = useMemo(
         () =>
             debounce((value: string) => {
-                setSuggestions(fuse.search(value, { limit: 25 }));
+                const results = fuse.search(value, { limit: 25 });
+                const items = results.map((r: { item: Style }) => r.item);
+                setSuggestions(items);
                 setIsLoading(false);
             }, 500),
         [props.styleJSON.styles],
