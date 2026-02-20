@@ -10,7 +10,7 @@ import styles from './style.scss';
 
 const PATTERNS: { readonly [k in IdentifierKind]: string } = {
     doi: '10\\.[^ ]+',
-    isbn: '[0-9-]+',
+    isbn: '[0-9\\-]+',
     pmcid: 'PMC[0-9]+',
     pmid: '[0-9]+',
     url: 'https?://.+',
