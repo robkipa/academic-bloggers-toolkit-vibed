@@ -1,5 +1,6 @@
 import { createBlock, parse } from '@wordpress/blocks';
 import { dispatch, select } from '@wordpress/data';
+import type { Citation } from 'citeproc';
 
 import { ZERO_WIDTH_SPACE } from 'utils/constants';
 import { createSelector } from 'utils/dom';
@@ -76,8 +77,9 @@ export function* removeReferences(itemIds: string[]) {
 }
 
 export function* updateReference(data: CSL.Data) {
+    const dataSelect = select('abt/data') as unknown as { getCitedItems: () => CSL.Data[] };
     const itemIsCited =
-        select('abt/data')
+        dataSelect
             .getCitedItems()
             .findIndex(item => item.id === data.id) >= 0;
     yield {
@@ -105,7 +107,7 @@ export function* parseCitations() {
     yield fetchLocale(styleXml);
     const processor = new Processor(styleXml);
     const citations = processor.parseCitations(
-        select('abt/data').getCitationsByIndex(),
+        (select('abt/data') as unknown as { getCitationsByIndex: () => Citation[] }).getCitationsByIndex(),
     );
     yield setBibliography(processor.bibliography);
     yield updateEditorCitations(citations);
@@ -131,10 +133,11 @@ export function* setStyle(style: Style) {
 
 function* save() {
     yield saveState();
-    yield dispatch('core/editor').autosave();
+    yield (dispatch as (key: string) => { autosave?: () => void })('core/editor').autosave?.();
 }
 
-function* setBibliography({ items, meta }: Processor.Bibliography) {
+function* setBibliography(bibliography: Processor.Bibliography) {
+    const { items, meta } = bibliography;
     const blocksList = select('core/block-editor').getBlocks();
     const bibliographyBlock = blocksList.find(
         block => block.name === 'abt/bibliography',

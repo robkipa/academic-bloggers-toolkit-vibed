@@ -54,8 +54,8 @@ export default function ToolbarMenu() {
             ? uiDispatch.setSidebarSortOrder
             : noop;
 
-    const abtUiStore = useSelect(
-        select => select('abt/ui') as { getSidebarSortMode(): string; getSidebarSortOrder(): string } | undefined,
+    const abtUiStore = (useSelect as unknown as (cb: (select: (key: string) => unknown) => { getSidebarSortMode(): string; getSidebarSortOrder(): string } | undefined, deps: unknown[]) => { getSidebarSortMode(): string; getSidebarSortOrder(): string } | undefined)(
+        (select: (key: string) => unknown) => select('abt/ui') as unknown as { getSidebarSortMode(): string; getSidebarSortOrder(): string } | undefined,
         [],
     );
     const sortMode = (abtUiStore?.getSidebarSortMode?.() ?? 'date') as

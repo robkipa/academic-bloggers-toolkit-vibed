@@ -1,6 +1,7 @@
-import { Component, createElement, ReactNode } from '@wordpress/element';
+import { Component, createElement } from '@wordpress/element';
+import type { ReactNode } from 'react';
 import { useSelect } from '@wordpress/data';
-import { PluginSettings } from '@wordpress/plugins';
+import type { PluginSettings } from '@wordpress/plugins';
 
 import Sidebar from './sidebar';
 
@@ -12,8 +13,8 @@ export const name = 'abt-sidebar';
  * editor-stores failed to load or load after the editor bundle).
  */
 function SidebarGate() {
-    const storesReady = useSelect(
-        select => {
+    const storesReady = (useSelect as unknown as (cb: (select: (key: string) => unknown) => boolean, deps: unknown[]) => boolean)(
+        (select: (key: string) => unknown) => {
             try {
                 select('abt/data');
                 select('abt/ui');

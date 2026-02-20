@@ -31,15 +31,17 @@ function AddFootnoteDialog({ onSubmit }: Props) {
             }}
         >
             <TextareaAutosize
-                inputRef={inputRef}
-                value={value}
-                onChange={e => setValue(e.currentTarget.value)}
-                onKeyDown={e => {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        onSubmit(value);
-                    }
-                }}
+                {...({
+                    inputRef,
+                    value,
+                    onChange: (e: { currentTarget: { value: string } }) => setValue(e.currentTarget.value),
+                    onKeyDown: (e: { key: string; preventDefault: () => void }) => {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            onSubmit(value);
+                        }
+                    },
+                } as Record<string, unknown>)}
             />
             <DialogToolbar>
                 <div className={styles.toolbar}>

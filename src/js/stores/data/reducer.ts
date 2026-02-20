@@ -1,4 +1,9 @@
-import { Action, combineReducers } from '@wordpress/data';
+// @wordpress/data combineReducers - use require when type resolution fails
+const { combineReducers } = require('@wordpress/data') as {
+    combineReducers: <S>(reducers: Record<string, (state: unknown, action: unknown) => unknown>) => (state: S | undefined, action: unknown) => S;
+};
+
+type Action = { type: string; [key: string]: unknown };
 import hash from 'string-hash';
 
 import { getJSONScriptData } from 'utils/dom';
@@ -37,7 +42,7 @@ export function citationStyles(
 ): State['citationStyles'] {
     switch (action.type) {
         case Actions.SET_CITATION_STYLES: {
-            return action.styles;
+            return (action as unknown as { styles: State['citationStyles'] }).styles;
         }
         default:
             return state;
@@ -61,15 +66,17 @@ export function references(
             return newItems.length > 0 ? [...state, ...newItems] : state;
         }
         case Actions.REMOVE_REFERENCES: {
-            return state.filter(({ id }) => !action.itemIds.includes(id));
+            const { itemIds } = action as unknown as { itemIds: string[] };
+            return state.filter(({ id }) => !itemIds.includes(id));
         }
         case Actions.UPDATE_REFERENCE: {
-            const index = state.findIndex(({ id }) => id === action.data.id);
+            const { data } = action as unknown as { data: CSL.Data };
+            const index = state.findIndex(({ id }) => id === data.id);
             return index === -1
-                ? [...state, action.data]
+                ? [...state, data]
                 : [
                       ...state.slice(0, index),
-                      action.data,
+                      data,
                       ...state.slice(index + 1),
                   ];
         }
@@ -84,7 +91,7 @@ export function style(
 ): State['style'] {
     switch (action.type) {
         case Actions.SET_STYLE:
-            return action.style;
+            return (action as unknown as { style: State['style'] }).style;
         default:
             return state;
     }
@@ -94,4 +101,4 @@ export default combineReducers({
     citationStyles,
     references,
     style,
-});
+} as Record<string, (state: unknown, action: unknown) => unknown>);

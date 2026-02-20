@@ -1,4 +1,6 @@
-import { HTMLProps } from '@wordpress/element';
+import type { HTMLAttributes } from 'react';
+
+type HTMLProps<T> = HTMLAttributes<T>;
 import { __ } from '@wordpress/i18n';
 import classNames from 'classnames';
 

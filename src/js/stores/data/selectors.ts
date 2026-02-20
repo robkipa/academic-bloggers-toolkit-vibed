@@ -95,11 +95,12 @@ export function getSortedItems(
         item => {
             switch (mode) {
                 case 'date': {
-                    const [year, month = 0, day = 1]: number[] = get(
+                    const parts = get(
                         item.issued,
                         '[date-parts][0]',
                         [-5000],
-                    );
+                    ) as number[] | [number, number?, number?];
+                    const [year, month = 0, day = 1] = Array.isArray(parts) ? parts.map(Number) : [parts];
                     return new Date(year, month, day).toJSON();
                 }
                 case 'publication':

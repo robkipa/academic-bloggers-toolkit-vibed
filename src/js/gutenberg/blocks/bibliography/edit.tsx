@@ -35,14 +35,17 @@ export default function BibliographyEdit(props: Props) {
                 >
                     {__('Heading Level', 'academic-bloggers-toolkit')}
                     <Toolbar
-                        controls={range(1, 7).map(level => ({
-                            icon: 'heading',
-                            title: sprintf(__('Heading %d'), level),
-                            isActive: level === headingLevel,
-                            onClick: () =>
-                                setAttributes({ headingLevel: level }),
-                            subscript: `${level}`,
-                        }))}
+                        {...({
+                            label: __('Headings', 'academic-bloggers-toolkit'),
+                            controls: range(1, 7).map(level => ({
+                                icon: 'heading',
+                                title: sprintf(__('Heading %d'), level),
+                                isActive: level === headingLevel,
+                                onClick: () =>
+                                    setAttributes({ headingLevel: level }),
+                                subscript: `${level}`,
+                            })),
+                        } as any)}
                     />
                     {__('Heading Alignment', 'academic-bloggers-toolkit')}
                     <AlignmentToolbar
@@ -124,17 +127,17 @@ function BibliographyHeading({
         <Tag className={className} style={{ textAlign: headingAlign }}>
             {isSelected && (
                 <TextareaAutosize
-                    placeholder={__(
-                        'Write heading...',
-                        'academic-bloggers-toolkit',
-                    )}
-                    value={heading}
-                    onBlur={() =>
-                        !heading && setAttributes({ isToggleable: false })
-                    }
-                    onChange={e =>
-                        setAttributes({ heading: e.currentTarget.value })
-                    }
+                    {...({
+                        placeholder: __(
+                            'Write heading...',
+                            'academic-bloggers-toolkit',
+                        ),
+                        value: heading,
+                        onBlur: () =>
+                            !heading && setAttributes({ isToggleable: false }),
+                        onChange: (e: { currentTarget: { value: string } }) =>
+                            setAttributes({ heading: e.currentTarget.value }),
+                    } as Record<string, unknown>)}
                 />
             )}
             {!isSelected && heading}

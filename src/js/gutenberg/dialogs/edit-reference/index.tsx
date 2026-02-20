@@ -16,14 +16,15 @@ interface Props extends DialogProps {
 }
 
 function EditDialog({ onSubmit, itemId }: Props) {
-    const data = useSelect(
-        select => select('abt/data').getItemById(itemId || ''),
+    const data = (useSelect as unknown as (cb: (select: (key: string) => unknown) => CSL.Data | undefined, deps: unknown[]) => CSL.Data | undefined)(
+        (select: (key: string) => unknown) =>
+            (select('abt/data') as unknown as { getItemById: (id: string) => CSL.Data | undefined }).getItemById(itemId || ''),
         [itemId],
     );
 
     return (
         <>
-            <ManualReferenceForm data={data} id={FORM_ID} onSubmit={onSubmit} />
+            <ManualReferenceForm data={data as CSL.Data} id={FORM_ID} onSubmit={onSubmit} />
             <DialogToolbar>
                 <div className={styles.toolbar}>
                     <Button isPrimary form={FORM_ID} type="submit">

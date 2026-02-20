@@ -1,4 +1,7 @@
-import { createRef, HTMLProps, RefObject, useEffect } from '@wordpress/element';
+import { createRef, useEffect } from '@wordpress/element';
+import type { HTMLAttributes, RefObject } from 'react';
+
+type HTMLProps<T> = HTMLAttributes<T>;
 import classNames from 'classnames';
 
 import styles from './style.scss';

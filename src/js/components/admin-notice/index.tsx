@@ -1,4 +1,4 @@
-import { ReactNode } from '@wordpress/element';
+import type { ReactNode } from 'react';
 import classNames from 'classnames';
 
 interface BaseProps {

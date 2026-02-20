@@ -1,6 +1,12 @@
-import { Action, select } from '@wordpress/data';
+import { select } from '@wordpress/data';
 
 import { fetchAjax } from 'utils/ajax';
+
+type Action = { type: string; style?: string; id?: string; state?: unknown };
+function assertDefined<T>(v: T | undefined, name: string): T {
+    if (v === undefined) throw new Error(`Missing ${name}`);
+    return v;
+}
 import { localeCache, styleCache } from 'utils/cache';
 
 import { StyleJSON } from './';
@@ -27,7 +33,7 @@ export function fetchLocale(style: string) {
 }
 
 export function fetchStyle() {
-    const { value, kind } = select('abt/data').getStyle();
+    const { value, kind } = (select('abt/data') as unknown as { getStyle: () => { value: string; kind: string } }).getStyle();
     if (kind === StyleKind.CUSTOM) {
         return value;
     }
@@ -38,8 +44,8 @@ export function fetchStyle() {
 }
 
 export function saveState() {
-    const id = select('core/editor').getCurrentPostId();
-    const post = select('abt/data').getSerializedState();
+    const id = (select('core/editor') as unknown as { getCurrentPostId: () => string }).getCurrentPostId();
+    const post = (select('abt/data') as unknown as { getSerializedState: () => { meta: { _abt_state: unknown } } }).getSerializedState();
     return {
         type: CtrlActions.SAVE_STATE,
         id,
@@ -53,16 +59,16 @@ const controls = {
         return fetchAjax('get_style_json').then(response => response.json());
     },
     FETCH_LOCALE({ style }: Action): Promise<string> {
-        return localeCache.fetchItem(style);
+        return localeCache.fetchItem(assertDefined(style, 'style'));
     },
     FETCH_STYLE({ id }: Action): Promise<string> {
-        return styleCache.fetchItem(id);
+        return styleCache.fetchItem(assertDefined(id, 'id'));
     },
     SAVE_STATE({ id, state }: Action): Promise<unknown> {
         return fetchAjax('update_abt_state', {
-            post_id: id,
-            state,
-        }).then(response => response.json());
+            post_id: assertDefined(id, 'id'),
+            state: assertDefined(state, 'state') as string | number | boolean,
+        }).then((response: { json: () => unknown }) => response.json());
     },
 };
 

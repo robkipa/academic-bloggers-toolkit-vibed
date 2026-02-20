@@ -1,6 +1,6 @@
 import { __ } from '@wordpress/i18n';
-import { FormatConfiguration } from '@wordpress/rich-text';
 
+import type { FormatConfiguration } from '../rich-text-format';
 import { FootnoteElement } from 'utils/element';
 import Footnote from './footnote';
 

@@ -52,7 +52,7 @@ export default function StyleForm() {
                     setStyle(
                         kind === SAVED_STYLE.kind
                             ? { ...SAVED_STYLE }
-                            : { kind, label: '', value: '' },
+                            : { kind: kind as StyleKind, label: '', value: '' },
                     )
                 }
             />
@@ -100,7 +100,7 @@ export default function StyleForm() {
                                         label: '',
                                         value: '',
                                     });
-                                    setErrorMessage(err.message);
+                                    setErrorMessage(err instanceof Error ? err.message : String(err));
                                     input.value = '';
                                 }
                             },

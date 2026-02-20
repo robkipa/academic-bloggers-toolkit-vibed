@@ -1,4 +1,8 @@
-import { Action, combineReducers } from '@wordpress/data';
+const { combineReducers } = require('@wordpress/data') as {
+    combineReducers: <S>(reducers: Record<string, (state: unknown, action: unknown) => unknown>) => (state: S | undefined, action: unknown) => S;
+};
+
+type Action = { type: string; [key: string]: unknown };
 
 import { IdentifierKind } from 'utils/constants';
 
@@ -17,7 +21,7 @@ export function addReferenceDialog(
         case Actions.SET_IDENTIFIER_KIND: {
             return {
                 ...state,
-                identifierKind: action.kind,
+                identifierKind: (action as unknown as { kind: IdentifierKind }).kind,
             };
         }
         default:
@@ -46,21 +50,22 @@ export function sidebar(
         case Actions.SET_SIDEBAR_SORT_MODE: {
             return {
                 ...state,
-                sortMode: action.mode,
+                sortMode: (action as unknown as { mode: State['sidebar']['sortMode'] }).mode,
             };
         }
         case Actions.SET_SIDEBAR_SORT_ORDER: {
             return {
                 ...state,
-                sortOrder: action.order,
+                sortOrder: (action as unknown as { order: State['sidebar']['sortOrder'] }).order,
             };
         }
         case Actions.TOGGLE_ITEM_SELECTED: {
+            const id = (action as unknown as { id: string }).id;
             return {
                 ...state,
-                selectedItems: state.selectedItems.includes(action.id)
-                    ? state.selectedItems.filter(id => id !== action.id)
-                    : [...state.selectedItems, action.id],
+                selectedItems: state.selectedItems.includes(id)
+                    ? state.selectedItems.filter(x => x !== id)
+                    : [...state.selectedItems, id],
             };
         }
         default:
@@ -71,4 +76,4 @@ export function sidebar(
 export default combineReducers({
     addReferenceDialog,
     sidebar,
-});
+} as Record<string, (state: unknown, action: unknown) => unknown>);

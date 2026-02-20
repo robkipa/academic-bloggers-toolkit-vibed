@@ -1,4 +1,8 @@
-import { HTMLProps } from '@wordpress/element';
+import type { InputHTMLAttributes } from 'react';
+
+/** HTML props for form inputs. */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type HTMLProps = InputHTMLAttributes<HTMLInputElement> & Record<string, any>;
 import { __ } from '@wordpress/i18n';
 
 interface BaseField<T = string> {
@@ -7,7 +11,7 @@ interface BaseField<T = string> {
 }
 
 export interface InputField extends BaseField<keyof CSL.Data> {
-    readonly inputProps?: Readonly<HTMLProps<HTMLInputElement>>;
+    readonly inputProps?: Readonly<HTMLProps>;
 }
 
 export type PersonField = BaseField<CSL.PersonFieldKey>;

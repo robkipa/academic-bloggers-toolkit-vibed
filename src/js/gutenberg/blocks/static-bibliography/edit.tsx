@@ -28,11 +28,10 @@ export default function StaticBibEdit(props: Props) {
         attributes: { orderedList, items },
         setAttributes,
     } = props;
-    const references = useSelect(select => {
-        const existingIds = items.map(item => item.id);
-        return select('abt/data')
-            .getSortedItems()
-            .filter(item => !existingIds.includes(item.id));
+    const references = (useSelect as unknown as (cb: (select: (key: string) => unknown) => CSL.Data[]) => CSL.Data[])((select: (key: string) => unknown) => {
+        const existingIds = items.map((item: { id: string }) => item.id);
+        const dataStore = select('abt/data') as unknown as { getSortedItems: () => CSL.Data[] };
+        return dataStore.getSortedItems().filter((item: CSL.Data) => !existingIds.includes(item.id));
     });
     return (
         <>
@@ -62,7 +61,9 @@ export default function StaticBibEdit(props: Props) {
             </InspectorControls>
             <BlockFormatControls>
                 <Toolbar
-                    controls={[
+                    {...({
+                        label: __('List style', 'academic-bloggers-toolkit'),
+                        controls: [
                         {
                             icon: 'editor-ul',
                             title: __(
@@ -85,7 +86,8 @@ export default function StaticBibEdit(props: Props) {
                                 setAttributes({ orderedList: true });
                             },
                         },
-                    ]}
+                    ],
+                    } as any)}
                 />
             </BlockFormatControls>
             {/* eslint-disable-next-line jsx-a11y/no-redundant-roles */}
@@ -185,7 +187,7 @@ async function addItem(
         return;
     }
     const styleXml = await styleCache.fetchItem(
-        globalSelect('abt/data').getStyle().value,
+        (globalSelect('abt/data') as unknown as { getStyle: () => { value: string } }).getStyle().value,
     );
     await localeCache.fetchItem(styleXml);
     const processor = new Processor(styleXml);

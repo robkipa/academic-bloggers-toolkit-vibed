@@ -1,3 +1,4 @@
+import { Dashicon } from '@wordpress/components';
 import { useDispatch } from '@wordpress/data';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
@@ -17,7 +18,7 @@ export default function StyleDialog() {
     return (
         <>
             <ToolbarMenuItem
-                icon="admin-appearance"
+                icon={<Dashicon icon="admin-appearance" />}
                 onClick={() => setIsOpen(true)}
             >
                 {__('Change citation style', 'academic-bloggers-toolkit')}
@@ -27,7 +28,7 @@ export default function StyleDialog() {
                 isOpen={isOpen}
                 title={__('Change citation style', 'academic-bloggers-toolkit')}
                 onClose={() => setIsOpen(false)}
-                onSubmit={style => {
+                onSubmit={(style: import('stores/data').Style) => {
                     setStyle(style);
                     setIsOpen(false);
                 }}

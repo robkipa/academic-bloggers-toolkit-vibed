@@ -1,8 +1,11 @@
-import { Format, Value } from '@wordpress/rich-text';
+import type { RichTextValue } from '@wordpress/rich-text';
 import { get } from 'lodash';
 
+/** Format shape (matches RichTextFormat; not exported from package). */
+export type Format = { type: string; attributes?: Record<string, unknown> };
+
 export function* iterate(
-    { formats = [] }: Value,
+    { formats = [] }: RichTextValue,
     formatType?: string,
 ): IterableIterator<Format> {
     for (const fmts of formats) {
@@ -32,7 +35,7 @@ export function mergeItems(items: string[], dataItems?: string): string {
     );
 }
 
-export function getNeighbors(type: string, val: Value): Format[] {
+export function getNeighbors(type: string, val: RichTextValue): Format[] {
     const { start = 0, end = val.formats.length } = val;
     let formats = neighbors('left', start, val, type);
     formats = neighbors('left', start - 1, val, type, formats);
@@ -48,12 +51,12 @@ export function getNeighbors(type: string, val: Value): Format[] {
 function neighbors(
     dir: 'left' | 'right',
     idx: number,
-    val: Value,
+    val: RichTextValue,
     type: string,
     located: Format[] = [],
 ): Format[] {
     const dirval = dir === 'left' ? -1 : 1;
-    const formats: Format[] = get(val, ['formats', idx], []);
+    const formats: Format[] = get(val, ['formats', idx], []) as Format[];
     const format = formats.find(item => item.type === type);
     return format
         ? neighbors(

@@ -82,10 +82,10 @@ interface UIDispatch {
 export default function IdentifierForm(props: Props) {
     const uiDispatch = useDispatch('abt/ui') as UIDispatch | undefined;
     const setIdentifierKind = uiDispatch?.setIdentifierKind ?? (() => void 0);
-    const storeKind = useSelect(
-        select => {
+    const storeKind = (useSelect as unknown as (cb: (select: (key: string) => unknown) => IdentifierKind, deps: unknown[]) => IdentifierKind)(
+        (select: (key: string) => unknown) => {
             try {
-                return select('abt/ui').getIdentifierKind();
+                return (select('abt/ui') as unknown as { getIdentifierKind: () => IdentifierKind }).getIdentifierKind();
             } catch {
                 return IdentifierKind.DOI;
             }

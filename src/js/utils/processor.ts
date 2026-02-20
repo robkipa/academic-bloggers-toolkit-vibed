@@ -46,7 +46,7 @@ class Processor {
 
     private sys: Engine['sys'] = {
         retrieveItem(id: string): CSL.Data {
-            const item = select('abt/data').getItemById(id);
+            const item = (select('abt/data') as unknown as { getItemById: (id: string) => CSL.Data | undefined }).getItemById(id);
             if (!item) {
                 throw new Error(
                     `CSL Data could not be found for item ID "${id}"`,

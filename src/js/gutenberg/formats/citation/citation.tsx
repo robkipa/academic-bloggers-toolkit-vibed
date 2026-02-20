@@ -1,9 +1,8 @@
 import { parse, serialize } from '@wordpress/blocks';
-import { compose } from '@wordpress/compose';
-import { withDispatch, withSelect } from '@wordpress/data';
+import { useDispatch, useSelect } from '@wordpress/data';
 import { useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { create, FormatProps, insert } from '@wordpress/rich-text';
+import { create, insert } from '@wordpress/rich-text';
 import { get } from 'lodash';
 
 import { ToolbarButton } from 'gutenberg/sidebar/toolbar';
@@ -11,33 +10,98 @@ import { ZERO_WIDTH_SPACE } from 'utils/constants';
 import { createSelector } from 'utils/dom';
 import { CitationElement } from 'utils/element';
 import { getNeighbors, iterate, mergeItems } from 'utils/formats';
+import type { FormatProps } from '../rich-text-format';
 
 import { name as NAME } from './';
 
 import './citation.scss?global';
 
-interface DispatchProps {
-    mergeLegacyCitations(): void;
-    parseCitations(): void;
-}
+type Props = FormatProps;
 
-interface SelectProps {
-    selectedItems: string[];
-}
+const legacyCitationSelector = createSelector(
+    ...CitationElement.legacyClassNames.map(cls => ({
+        classNames: [cls],
+        attributes: { 'data-reflist': true },
+    })),
+);
 
-type OwnProps = FormatProps;
-type Props = DispatchProps & SelectProps & OwnProps;
+function Citation({ value, onChange }: Props) {
+    const blockEditorDispatch = useDispatch('core/block-editor') as { updateBlock: (clientId: string, updates: Record<string, unknown>) => void };
+    const dataDispatch = useDispatch('abt/data') as { parseCitations?: () => unknown };
+    const uiDispatch = useDispatch('abt/ui') as { clearSelectedItems?: () => void };
+    const blockSelect = (useSelect as unknown as (sel: (s: (k: string) => unknown) => { getSelectedBlock: () => { clientId: string } | null }) => { getSelectedBlock: () => { clientId: string } | null })((select: (key: string) => unknown) =>
+        select('core/block-editor') as { getSelectedBlock: () => { clientId: string } | null },
+    );
+    const selectedItems = (useSelect as unknown as (sel: (s: (k: string) => unknown) => string[]) => string[])((select: (key: string) => unknown) => {
+        const data = select('abt/data') as { getItems: () => { id: string }[] };
+        const ui = select('abt/ui') as { getSelectedItems: () => string[] };
+        const referenceIds = data.getItems().map(({ id }) => id);
+        return ui.getSelectedItems().filter(id => referenceIds.includes(id));
+    });
 
-function Citation(props: Props) {
-    useEffect(() => props.mergeLegacyCitations(), []);
-    const { selectedItems } = props;
+    const mergeLegacyCitations = () => {
+        const selectedBlock = blockSelect.getSelectedBlock();
+        if (!selectedBlock) {
+            return;
+        }
+        const block = document.createElement('div');
+        block.innerHTML = serialize([selectedBlock as Parameters<typeof serialize>[0][0]]);
+        const legacyNodes = block.querySelectorAll<HTMLElement>(
+            legacyCitationSelector,
+        );
+        if (legacyNodes.length === 0) {
+            return;
+        }
+        for (const node of legacyNodes) {
+            node.className = CitationElement.className;
+            node.contentEditable = 'false';
+            node.dataset.items = node.dataset.reflist ?? '';
+            delete node.dataset.reflist;
+            if (node.firstElementChild) {
+                node.dataset.hasChildren = 'true';
+                node.firstElementChild.innerHTML =
+                    ZERO_WIDTH_SPACE +
+                    node.firstElementChild.innerHTML +
+                    ZERO_WIDTH_SPACE;
+            } else {
+                node.innerHTML =
+                    ZERO_WIDTH_SPACE + node.innerHTML + ZERO_WIDTH_SPACE;
+            }
+        }
+        const parsed = parse(block.innerHTML)[0] as unknown as { clientId: string; [k: string]: unknown };
+        const { clientId: _clientId, ...updates } = parsed;
+        blockEditorDispatch.updateBlock(selectedBlock.clientId, updates);
+    };
+
+    const parseCitations = () => {
+        if (typeof uiDispatch.clearSelectedItems === 'function') {
+            uiDispatch.clearSelectedItems();
+        }
+        if (typeof dataDispatch.parseCitations === 'function') {
+            (dataDispatch.parseCitations as () => unknown)();
+        }
+    };
+
+    useEffect(() => {
+        mergeLegacyCitations();
+    }, []);
+
+    const handleInsertCitation = () => {
+        insertCitation({
+            onChange,
+            parseCitations,
+            selectedItems,
+            value,
+        });
+    };
+
     return (
         <>
             <ToolbarButton
                 disabled={selectedItems.length === 0}
                 icon="exit"
                 label={__('Insert citation', 'academic-bloggers-toolkit')}
-                onClick={() => insertCitation(props)}
+                onClick={handleInsertCitation}
             />
         </>
     );
@@ -48,107 +112,37 @@ function insertCitation({
     parseCitations,
     selectedItems,
     value,
-}: Props) {
+}: Props & { selectedItems: string[]; parseCitations: () => void }) {
     const { activeFormats = [] } = value;
     const activeCitation = activeFormats.find(f => f.type === NAME);
 
-    // If a citation format is currently selected, merge selected references
-    // into that format.
     if (activeCitation) {
-        const selectedId = get(activeCitation, ['attributes', 'id']);
+        const selectedId = get(activeCitation, ['attributes', 'id']) as string | undefined;
         for (const { attributes = {} } of iterate(value, NAME)) {
-            if (attributes.id === selectedId) {
-                attributes.items = mergeItems(selectedItems, attributes.items);
+            if ((attributes as { id?: string }).id === selectedId) {
+                (attributes as { items?: string }).items = mergeItems(selectedItems, (attributes as { items?: string }).items);
             }
         }
         onChange(value);
-    }
-    // If no citations are currently selected, check to see if the cursor is
-    // currently touching up against an existing format. If so, merge into
-    // that citation format.
-    else {
+    } else {
         const formats = getNeighbors(NAME, value);
         if (formats.length > 0) {
             for (const format of formats) {
-                format.attributes = format.attributes || {};
+                const attrs = (format.attributes || {}) as { items?: string };
                 format.attributes = {
-                    ...format.attributes,
-                    items: mergeItems(selectedItems, format.attributes.items),
+                    ...attrs,
+                    items: mergeItems(selectedItems, attrs.items),
                 };
             }
             onChange(value);
-        }
-        // Otherwise just insert a new citation format.
-        else {
+        } else {
             const newValue = create({
                 html: CitationElement.create(selectedItems),
             });
             onChange(insert(value, newValue));
         }
     }
-    return parseCitations();
+    parseCitations();
 }
 
-const legacyCitationSelector = createSelector(
-    ...CitationElement.legacyClassNames.map(cls => ({
-        classNames: [cls],
-        attributes: { 'data-reflist': true },
-    })),
-);
-
-export default compose(
-    withDispatch<DispatchProps, OwnProps>((dispatch, _, { select }) => ({
-        mergeLegacyCitations() {
-            const selectedBlock = select(
-                'core/block-editor',
-            ).getSelectedBlock();
-            if (!selectedBlock) {
-                return;
-            }
-            const block = document.createElement('div');
-            block.innerHTML = serialize([selectedBlock]);
-            const legacyNodes = block.querySelectorAll<HTMLElement>(
-                legacyCitationSelector,
-            );
-            if (legacyNodes.length === 0) {
-                return;
-            }
-            for (const node of legacyNodes) {
-                node.className = CitationElement.className;
-                node.contentEditable = 'false';
-                node.dataset.items = node.dataset.reflist;
-                delete node.dataset.reflist;
-                if (node.firstElementChild) {
-                    node.dataset.hasChildren = 'true';
-                    node.firstElementChild.innerHTML =
-                        ZERO_WIDTH_SPACE +
-                        node.firstElementChild.innerHTML +
-                        ZERO_WIDTH_SPACE;
-                } else {
-                    node.innerHTML =
-                        ZERO_WIDTH_SPACE + node.innerHTML + ZERO_WIDTH_SPACE;
-                }
-            }
-            const { clientId: _clientId, ...updates } = parse(block.innerHTML)[0];
-            dispatch('core/block-editor').updateBlock(
-                selectedBlock.clientId,
-                updates,
-            );
-        },
-        parseCitations() {
-            dispatch('abt/ui').clearSelectedItems();
-            dispatch('abt/data').parseCitations();
-        },
-    })),
-    withSelect<SelectProps, OwnProps & DispatchProps>(select => {
-        const referenceIds = select('abt/data')
-            .getItems()
-            .map(({ id }) => id);
-        const selectedItems = select('abt/ui')
-            .getSelectedItems()
-            .filter(id => referenceIds.includes(id));
-        return {
-            selectedItems,
-        };
-    }),
-)(Citation);
+export default Citation;

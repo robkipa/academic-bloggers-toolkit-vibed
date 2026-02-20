@@ -54,22 +54,10 @@ export default function Sidebar() {
     const dataDispatch = useDispatch('abt/data');
     const uiDispatch = useDispatch('abt/ui');
 
-    const parseCitations =
-        dataDispatch && typeof dataDispatch.parseCitations === 'function'
-            ? dataDispatch.parseCitations
-            : noop;
-    const parseFootnotes =
-        dataDispatch && typeof dataDispatch.parseFootnotes === 'function'
-            ? dataDispatch.parseFootnotes
-            : noop;
-    const updateReference =
-        dataDispatch && typeof dataDispatch.updateReference === 'function'
-            ? dataDispatch.updateReference
-            : noopReturn;
-    const toggleItemSelected =
-        uiDispatch && typeof uiDispatch.toggleItemSelected === 'function'
-            ? uiDispatch.toggleItemSelected
-            : noop;
+    const parseCitations = typeof dataDispatch?.parseCitations === 'function' ? dataDispatch.parseCitations : noop;
+    const parseFootnotes = typeof dataDispatch?.parseFootnotes === 'function' ? dataDispatch.parseFootnotes : noop;
+    const updateReference = typeof dataDispatch?.updateReference === 'function' ? dataDispatch.updateReference : noopReturn;
+    const toggleItemSelected = typeof uiDispatch?.toggleItemSelected === 'function' ? uiDispatch.toggleItemSelected : noop;
 
     const {
         citedItems,
@@ -77,18 +65,22 @@ export default function Sidebar() {
         isTyping,
         selectedItems,
         uncitedItems,
-    } = useSelect(select => {
+    } = (useSelect as unknown as (cb: (select: (storeKey: string) => unknown) => SidebarSelectResult) => SidebarSelectResult)((select: (storeKey: string) => unknown) => {
         let result: SidebarSelectResult;
         try {
-            const { getCitedItems, getFootnotes, getSortedItems } = select(
-                'abt/data',
-            );
-            const {
-                getSelectedItems,
-                getSidebarSortMode,
-                getSidebarSortOrder,
-            } = select('abt/ui');
-            const blockEditor = select('core/block-editor');
+            const dataStore = select('abt/data') as unknown as {
+                getCitedItems: () => CSL.Data[] | null;
+                getFootnotes: () => Array<{ id: string; content: string }> | null;
+                getSortedItems: (mode: string, order: string, which: string) => CSL.Data[] | null;
+            };
+            const uiStore = select('abt/ui') as unknown as {
+                getSelectedItems: () => string[];
+                getSidebarSortMode: () => string;
+                getSidebarSortOrder: () => string;
+            };
+            const { getCitedItems, getFootnotes, getSortedItems } = dataStore;
+            const { getSelectedItems, getSidebarSortMode, getSidebarSortOrder } = uiStore;
+            const blockEditor = select('core/block-editor') as unknown as { isTyping?: () => boolean } | null;
             const isTypingVal =
                 blockEditor && typeof blockEditor.isTyping === 'function'
                     ? blockEditor.isTyping()

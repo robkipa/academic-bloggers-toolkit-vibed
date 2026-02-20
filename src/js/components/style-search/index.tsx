@@ -33,21 +33,11 @@ export default function StyleSearch(props: Props) {
                 threshold: 0.3,
                 location: 0,
                 distance: 50,
-                maxPatternLength: 32,
                 minMatchCharLength: 2,
                 keys: [
-                    {
-                        name: 'label',
-                        weight: 0.4,
-                    },
-                    {
-                        name: 'value',
-                        weight: 0.2,
-                    },
-                    {
-                        name: 'shortTitle',
-                        weight: 0.4,
-                    },
+                    { name: 'label', weight: 0.4 },
+                    { name: 'value', weight: 0.2 },
+                    { name: 'shortTitle', weight: 0.4 },
                 ],
             }),
         [props.styleJSON.styles],

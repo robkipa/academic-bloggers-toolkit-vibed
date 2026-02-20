@@ -8,15 +8,17 @@ const INVALID_BLOCK_TYPES = ['core/freeform', 'core/html'];
 export function getEditorDOM(excludeInvalid = false): HTMLDivElement {
     const doc = document.createElement('div');
     if (excludeInvalid) {
-        const filteredBlocks = select('core/editor')
-            .getEditorBlocks()
-            .filter(
-                block =>
-                    !INVALID_BLOCK_TYPES.includes(block.name) && block.isValid,
-            );
-        doc.innerHTML = serialize(filteredBlocks);
+        const editorSelect = select('core/editor') as unknown as {
+            getEditorBlocks: () => Array<{ name: string; isValid: boolean }>;
+        };
+        const filteredBlocks = editorSelect.getEditorBlocks().filter(
+            (block: { name: string; isValid: boolean }) =>
+                !INVALID_BLOCK_TYPES.includes(block.name) && block.isValid,
+        );
+        doc.innerHTML = serialize(filteredBlocks as Parameters<typeof serialize>[0]);
     } else {
-        doc.innerHTML = select('core/editor').getEditedPostContent();
+        const editorSelect = select('core/editor') as unknown as { getEditedPostContent: () => string };
+        doc.innerHTML = editorSelect.getEditedPostContent();
     }
     return doc;
 }

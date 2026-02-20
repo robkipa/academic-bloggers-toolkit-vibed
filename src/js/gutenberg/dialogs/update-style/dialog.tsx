@@ -15,7 +15,9 @@ interface Props extends DialogProps {
 }
 
 function Dialog({ onSubmit }: Props) {
-    const style = useSelect(select => select('abt/data').getStyle());
+    const style = (useSelect as unknown as (cb: (select: (key: string) => unknown) => Style) => Style)((select: (key: string) => unknown) =>
+        (select('abt/data') as unknown as { getStyle: () => Style }).getStyle(),
+    );
     const [value, setValue] = useState(style);
     return (
         <form
@@ -27,7 +29,7 @@ function Dialog({ onSubmit }: Props) {
             <StyleSearch
                 autofocus
                 value={value}
-                onChange={selected => setValue(selected)}
+                onChange={(selected: Style) => setValue(selected)}
             />
             <DialogToolbar>
                 <div className={styles.toolbar}>

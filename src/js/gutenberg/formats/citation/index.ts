@@ -1,6 +1,6 @@
 import { __ } from '@wordpress/i18n';
-import { FormatConfiguration } from '@wordpress/rich-text';
 
+import type { FormatConfiguration } from '../rich-text-format';
 import { CitationElement } from 'utils/element';
 import Citation from './citation';
 
@@ -16,7 +16,7 @@ export const config: FormatConfiguration = {
         id: 'id',
         items: 'data-items',
     },
-    edit: Citation,
+    edit: Citation as FormatConfiguration['edit'],
 };
 
 export default [name, config] as [string, typeof config];

@@ -163,13 +163,10 @@ function parseDateField<T extends CSL.DateFieldKey>(
         return {};
     }
     const date = new Date(input);
-    return {
-        [key]: {
-            raw: [
-                date.getUTCFullYear(),
-                `0${date.getUTCMonth() + 1}`.slice(-2),
-                `0${date.getUTCDate()}`.slice(-2),
-            ].join('/'),
-        },
-    };
+    const raw = [
+        date.getUTCFullYear(),
+        `0${date.getUTCMonth() + 1}`.slice(-2),
+        `0${date.getUTCDate()}`.slice(-2),
+    ].join('/');
+    return { [key]: { raw } } as { [k in T]: CSL.Date };
 }

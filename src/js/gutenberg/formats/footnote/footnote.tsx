@@ -2,10 +2,11 @@ import { RichTextToolbarButton } from '@wordpress/block-editor';
 import { useDispatch } from '@wordpress/data';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { create, FormatProps, insert, remove } from '@wordpress/rich-text';
+import { create, insert, remove } from '@wordpress/rich-text';
 import { get } from 'lodash';
 
 import AddFootnoteDialog from 'gutenberg/dialogs/add-footnote';
+import type { FormatProps } from '../rich-text-format';
 import { FootnoteElement } from 'utils/element';
 
 import { name as NAME } from './';
@@ -18,7 +19,7 @@ export default function Footnote({ isActive, value, onChange }: Props) {
     const [isOpen, setIsOpen] = useState(false);
 
     const { activeFormats = [], start, end } = value;
-    const footnoteIsSelected = activeFormats.some(f => f.type === NAME);
+    const footnoteIsSelected = activeFormats.some((f: { type?: string }) => f.type === NAME);
 
     return (
         <>

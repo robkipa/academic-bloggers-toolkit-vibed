@@ -4,7 +4,7 @@
  */
 import 'regenerator-runtime/runtime';
 
-import { registerStore } from '@wordpress/data';
+const { registerStore } = require('@wordpress/data') as { registerStore: (name: string, config: unknown) => unknown };
 
 import dataStore from './data';
 import uiStore from './ui';
