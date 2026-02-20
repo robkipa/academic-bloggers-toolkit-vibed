@@ -1,4 +1,4 @@
-import { Button, RadioControl, ToggleControl } from '@wordpress/components';
+import { Button, RadioControl } from '@wordpress/components';
 import type { ComponentProps } from 'react';
 import { useDispatch } from '@wordpress/data';
 import { useState } from '@wordpress/element';
@@ -66,7 +66,6 @@ function Dialog({ onClose, onSubmit }: Props) {
             {mode === 'search' && (
                 <ReferenceFormSearch
                     setBusy={setBusy}
-                    onClose={onClose}
                     onError={onError}
                     onSubmit={onSubmit}
                 />
