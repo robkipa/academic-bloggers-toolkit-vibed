@@ -8,7 +8,6 @@ import { ResponseError } from 'utils/error';
 import styles from './style.scss';
 
 interface Props {
-    onClose(): void;
     onError(message: string): void;
     onSubmit(data: CSL.Data): void;
     setBusy(busy: boolean): void;
@@ -17,7 +16,6 @@ interface Props {
 const RETMAX = 20;
 
 export default function ReferenceFormSearch({
-    onClose,
     onError,
     onSubmit,
     setBusy,
