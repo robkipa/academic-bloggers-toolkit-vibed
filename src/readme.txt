@@ -25,7 +25,7 @@ To dive right into the documentation, check out the [Academic Blogger's Toolkit 
 
 = Features =
 
-* Insert formatted references on the fly using **PMID**, **DOI** (CrossRef, DataCite, & mEDRA), **URL**, or **ISBN**.
+* **Search PubMed or PMC by keyword** from the post editor and insert references instantly, or add by **PMID**, **PMCID**, **DOI** (CrossRef, DataCite, & mEDRA), **URL**, or **ISBN**.
 * Manually insert formatted references from **over 15 types of references**.
 * **Import a full bibliography from your favorite reference manager** using an exported `.ris` file.
 * Automatically format references for **every citation style on planet earth**.

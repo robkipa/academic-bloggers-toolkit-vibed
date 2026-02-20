@@ -145,7 +145,11 @@ function ReferenceFormManual(props: Props) {
                             }}
                             kind={data.type}
                             onError={setErrorMessage}
-                            onSubmit={consumeData}
+                            onSubmit={cslData => {
+                                const [dataFields, peopleFields] = consumeData(cslData);
+                                setData(dataFields);
+                                setPeople(peopleFields);
+                            }}
                         />
                     )}
                     <PeopleFields fields={fields[data.type].people} />

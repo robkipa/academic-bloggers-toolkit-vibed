@@ -1,3 +1,11 @@
+.modeSelect {
+    margin-bottom: 12px;
+
+    :global(.components-base-control__field) {
+        margin-bottom: 0;
+    }
+}
+
 .toolbar {
     display: grid;
     grid-template-columns: auto auto;
