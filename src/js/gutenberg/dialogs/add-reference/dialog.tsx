@@ -1,5 +1,4 @@
 import { Button, RadioControl } from '@wordpress/components';
-import type { ComponentProps } from 'react';
 import { useDispatch } from '@wordpress/data';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
@@ -31,9 +30,6 @@ function Dialog({ onClose, onSubmit }: Props) {
     return (
         <>
             <RadioControl
-                {...({ __nextHasNoMarginBottom: true } as ComponentProps<
-                    typeof RadioControl
-                > & { __nextHasNoMarginBottom?: boolean })}
                 className={styles.modeSelect}
                 options={[
                     {
