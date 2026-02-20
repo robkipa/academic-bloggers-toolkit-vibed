@@ -41,7 +41,10 @@ function get_website_meta() {
 		wp_send_json_error( [], 400 );
 	}
 
-	$url  = esc_url_raw( wp_unslash( $_POST['url'] ) );
+	$url = esc_url_raw( wp_unslash( $_POST['url'] ) );
+	if ( ! wp_http_validate_url( $url ) ) {
+		wp_send_json_error( [], 400 );
+	}
 	$raw  = wp_remote_retrieve_body( wp_safe_remote_get( $url ) );
 	$html = new \DOMDocument();
 	libxml_use_internal_errors( true );
@@ -197,11 +200,18 @@ function update_abt_state() {
 		wp_send_json_error( 'required fields not sent', 400 );
 	}
 	$post_id = intval( $_POST['post_id'] );
-	$state   = json_decode( wp_unslash( $_POST['state'] ) ); // phpcs:ignore
+	$post    = $post_id ? get_post( $post_id ) : null;
+	if ( ! $post instanceof \WP_Post ) {
+		wp_send_json_error( 'invalid post', 404 );
+	}
+	if ( ! current_user_can( 'edit_post', $post_id ) ) {
+		wp_send_json_error( 'insufficient permissions', 403 );
+	}
+	$state = json_decode( wp_unslash( $_POST['state'] ) ); // phpcs:ignore
 	if ( is_null( $state ) ) {
 		wp_send_json_error( 'state is null', 400 );
 	}
-	$updated = update_post_meta(
+	update_post_meta(
 		$post_id,
 		'_abt_state',
 		wp_slash(
