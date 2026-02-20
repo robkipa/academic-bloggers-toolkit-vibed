@@ -5,3 +5,12 @@ NOTES.md
 TODO.md
 .env
 src/languages/*.pot
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Cursor IDE
+.cursor
