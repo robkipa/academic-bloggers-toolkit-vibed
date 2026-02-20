@@ -4,14 +4,31 @@ import hash from 'string-hash';
 import { getJSONScriptData } from 'utils/dom';
 
 import { SavedState, State } from './';
-import { Actions } from './constants';
+import { Actions, StyleKind } from './constants';
+
+const DEFAULT_SAVED_STATE: SavedState = {
+    references: [],
+    style: {
+        kind: StyleKind.PREDEFINED,
+        value: 'american-medical-association',
+        label: 'American Medical Association',
+    },
+};
+
+function getInitialSavedState(): SavedState {
+    try {
+        return getJSONScriptData<SavedState>('abt-editor-state');
+    } catch {
+        return DEFAULT_SAVED_STATE;
+    }
+}
 
 const INITIAL_STATE: State = {
     citationStyles: {
         renamed: {},
         styles: [],
     },
-    ...getJSONScriptData<SavedState>('abt-editor-state'),
+    ...getInitialSavedState(),
 };
 
 export function citationStyles(

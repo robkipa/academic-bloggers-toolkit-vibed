@@ -15,13 +15,18 @@ use function ABT\Utils\add_json_script;
 
 /**
  * Enqueue admin scripts.
+ * Skips Site Editor: ABT uses core/editor (post context); Site Editor has no post and would white-screen.
  */
 function enqueue_scripts() {
+	$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+	if ( $screen && $screen->id === 'site-editor' ) {
+		return;
+	}
 	global $post;
 	wp_enqueue_style( 'abt-editor' );
 	wp_enqueue_script( 'abt-editor' );
 
-	$state = init_editor_state( $post->ID );
+	$state = ( $post instanceof \WP_Post && $post->ID ) ? init_editor_state( $post->ID ) : get_default_editor_state();
 	add_json_script( 'abt-editor-state', $state );
 }
 add_action( 'enqueue_block_editor_assets', __NAMESPACE__ . '\enqueue_scripts' );
@@ -67,6 +72,20 @@ function get_default_citation_style(): array {
 		'kind'  => 'predefined',
 		'label' => 'American Medical Association',
 		'value' => 'american-medical-association',
+	];
+}
+
+/**
+ * Default editor state when there is no post (e.g. Site Editor).
+ *
+ * @return object The editor state (references, style).
+ */
+function get_default_editor_state(): object {
+	$opts  = get_option( ABT_OPTIONS_KEY, [] );
+	$style = $opts['citation_style'] ?? get_default_citation_style();
+	return (object) [
+		'references' => [],
+		'style'      => $style,
 	];
 }
 
