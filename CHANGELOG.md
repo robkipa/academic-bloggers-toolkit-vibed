@@ -1,5 +1,29 @@
 # CHANGELOG
 
+## 6.0.3
+
+### Rebrand & fork (vibed)
+
+-   Plugin rebranded as **Academic Blogger's Toolkit Vibed**: main file `academic-bloggers-toolkit-vibed.php`; Plugin Name, Author (Rob Kipa + AI), URIs, Donate link updated. Zip/slug `academic-bloggers-toolkit-vibed`. Readme, README.md, options page, `.github` (FUNDING, CONTRIBUTING, ISSUE_TEMPLATE) updated for the fork.
+
+### Patches & improvements
+
+-   **Fix:** Citation style search suggestion list was blank; results now mapped to items with `label` for `getSuggestionValue` / `renderSuggestion`.
+-   **Options:** Default empty array when options missing/invalid; default citation style when none selected; safe empty structure if citation-styles JSON missing/invalid; options page PHP 8.0 check.
+-   **Endpoints:** URL validation (400 for invalid URLs); post state update checks for valid post and user permissions.
+-   **Options page:** Script URLs to HTTPS (e.g. CodePen); citation style validation before save.
+-   **ToolbarMenu:** `onClickCapture` → `onClick` on section element for correct event propagation.
+-   **Identifiers:** PMID replaced with ISBN, URL added in constants and reference form; regex and dropdown support ISBN/URL; `fetchData` handles new types.
+-   **ISBN resolver:** Google Books replaced with **Open Library API**; Open Library editions/authors structures; improved author parsing and CSL construction.
+-   **Data store:** Selectors no longer clone `citationStyles`, `style`, `references`, or item-by-ID; simpler, faster reads.
+-   **Releases:** Custom source-archive script removed; GitHub provides zip/tar.gz per release. `.gitignore`: `.DS_Store`, `.cursor`, `Thumbs.db`.
+
+## 6.0.2
+
+### Patches
+
+-   **Fix:** Avoid PHP fatal and white screen in Site Editor. Editor state used `$post->ID` where Site Editor has no post; `init_editor_state()` now receives a valid post ID only when editing a post and uses default state otherwise. ABT editor script not loaded on Site Editor screen; reducer falls back to default state if state script missing.
+
 ## 6.0.1
 
 ### Patches
@@ -19,7 +43,7 @@
 -   **Deprecation:** Replace `IconButton` with `Button` (toolbar, dialogs, autocite, people fields, static bib). `ToggleControl` + `__nextHasNoMarginBottom`, `FormFileUpload` + `__next40pxDefaultSize` where supported.
 -   **Compatibility:** Requires WP 6.5+, Tested 6.9, PHP 8.0+. Depend on `wp-editor` and `wp-edit-post`. Sidebar `useSelect` in try/catch; footnote list type for TypeScript.
 
-### Tooling & dependencies (Feb 2026)
+### Tooling & dependencies
 
 -   **ESLint:** Upgrade to ESLint 9; flat config (`eslint.config.mjs`), `typescript-eslint` and `eslint-plugin-jsx-a11y`. Remove `@dsifford/eslint-config`. Fix all no-explicit-any warnings (typed component props, `Dashicon` for menu icons, `onHover` on `MenuItemsChoice`).
 -   **Build:** Upgrade copy-webpack-plugin to v9 (from v5); avoids ajv conflict with ESLint so build and lint work in one install. Local types for copy-webpack-plugin in `types/modules.d.ts`. Sass in `frontend.scss`: `@import` → `@use`. Webpack performance limits raised for editor bundle and citation-styles.
