@@ -72,8 +72,17 @@ function render_options_page() {
 	) {
 		// Ignoring because there's no need to sanitize this.
 		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		$options['citation_style'] = json_decode( wp_unslash( $_POST['citation_style'] ), true );
-		update_option( ABT_OPTIONS_KEY, $options );
+		$decoded = json_decode( wp_unslash( $_POST['citation_style'] ), true );
+		if (
+			is_array( $decoded ) &&
+			isset( $decoded['kind'], $decoded['label'], $decoded['value'] ) &&
+			is_string( $decoded['kind'] ) &&
+			is_string( $decoded['label'] ) &&
+			is_string( $decoded['value'] )
+		) {
+			$options['citation_style'] = $decoded;
+			update_option( ABT_OPTIONS_KEY, $options );
+		}
 	}
 
 	if ( empty( $options['citation_style'] ) || ! is_array( $options['citation_style'] ) ) {

@@ -162,7 +162,7 @@ function register_scripts() {
 	//
 	wp_register_script(
 		'codepen',
-		'//assets.codepen.io/assets/embed/ei.js',
+		'https://assets.codepen.io/assets/embed/ei.js',
 		[],
 		ABT_VERSION,
 		true

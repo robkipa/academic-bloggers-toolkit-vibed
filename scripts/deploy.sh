@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
+# Must be run via npm (e.g. npm run deploy) so npm_package_version is set.
 VERSION="${npm_package_version?This script must be called using npm}"
-ROOTDIR=$PWD
+ROOTDIR="$(cd "$(dirname "$0")/.." && pwd)"
 SVNROOT=$(cd "$ROOTDIR" && cd ../SVN && pwd || exit)
 
 # shellcheck source=../.env

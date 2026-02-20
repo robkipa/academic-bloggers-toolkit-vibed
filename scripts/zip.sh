@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Must be run via npm (e.g. npm run zip) so npm_package_version is set.
 set -e
 
 ROOTDIR="$(cd "$(dirname "$0")/.." && pwd)"
