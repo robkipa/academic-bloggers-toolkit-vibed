@@ -1,6 +1,6 @@
 {
   "private": true,
-  "version": "6.0.3",
+  "version": "6.1.0",
   "scripts": {
     "build": "npm run webpack -- --mode production",
     "build:dev": "npm run webpack -- --mode development",

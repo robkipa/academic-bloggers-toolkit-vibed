@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## 6.1.0
+
+### PubMed search
+
+-   **Feature:** New PubMed search: fetch and display references by keyword from the post editor; improved UI for search and insertion.
+
+### Refactors and cleanup
+
+-   **Citation:** Refactored citation handling and state management in the Citation component.
+-   **State:** Refactored state management and type handling across multiple components; state selectors no longer clone unnecessarily.
+-   **ReferenceFormSearch:** Removed unused `onClose` prop; refactored dialog component; removed unused ToggleControl import.
+-   **RadioControl:** Removed spread that added `__nextHasNoMarginBottom`; removed unused ComponentProps import from react.
+
 ## 6.0.3
 
 ### Rebrand & fork (vibed)
